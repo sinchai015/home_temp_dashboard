@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Kanit', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen p-4 md:p-8">
+  <div class="max-w-7xl mx-auto space-y-6">
+    
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-sky-100 shadow-sm">
+      <div>
+        <h1 class="text-2xl md:text-3xl font-bold text-sky-700">ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน</h1>
+        <p class="text-slate-500 text-sm mt-1">Home Temperature & Humidity Monitoring Dashboard (DHT11)</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          เชื่อมต่อข้อมูลชีต DHT_11
+        </span>
+        <button onclick="fetchData()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl transition-all shadow-md shadow-emerald-200">
+          รีเฟรชข้อมูล
+        </button>
+      </div>
+    </header>
+
+    <!-- Cards Summary -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Temp Current -->
+      <div class="bg-white border border-emerald-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-500">
+          <span class="text-sm font-medium">อุณหภูมิปัจจุบัน</span>
+          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        </div>
+        <div class="my-3">
+          <span id="currTemp" class="text-4xl font-extrabold text-emerald-600">--</span>
+          <span class="text-lg text-slate-400 ml-1">°C</span>
+        </div>
+        <div class="text-xs text-slate-500 flex justify-between">
+          <span>เฉลี่ย: <strong id="avgTemp" class="text-slate-700">-- °C</strong></span>
+          <span>มิน-แม็กซ์: <strong id="minMaxTemp" class="text-slate-700">-- / --</strong></span>
+        </div>
+      </div>
+
+      <!-- Humidity Current -->
+      <div class="bg-white border border-sky-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-500">
+          <span class="text-sm font-medium">ความชื้นปัจจุบัน</span>
+          <svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"></path></svg>
+        </div>
+        <div class="my-3">
+          <span id="currHum" class="text-4xl font-extrabold text-sky-600">--</span>
+          <span class="text-lg text-slate-400 ml-1">%</span>
+        </div>
+        <div class="text-xs text-slate-500 flex justify-between">
+          <span>เฉลี่ย: <strong id="avgHum" class="text-slate-700">-- %</strong></span>
+          <span>มิน-แม็กซ์: <strong id="minMaxHum" class="text-slate-700">-- / --</strong></span>
+        </div>
+      </div>
+
+      <!-- Total Readings -->
+      <div class="bg-white border border-sky-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-500">
+          <span class="text-sm font-medium">จำนวนจุดบันทึก (ช่วงที่เลือก)</span>
+          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>
+        </div>
+        <div class="my-3">
+          <span id="recordCount" class="text-4xl font-extrabold text-sky-700">--</span>
+          <span class="text-lg text-slate-400 ml-1">รายการ</span>
+        </div>
+        <div class="text-xs text-slate-500">
+          อัปเดตล่าสุด: <span id="lastUpdated" class="text-slate-700">--:--:--</span>
+        </div>
+      </div>
+
+      <!-- Status Comfort Card -->
+      <div class="bg-white border border-emerald-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+        <div class="flex items-center justify-between text-slate-500">
+          <span class="text-sm font-medium">สภาวะแวดล้อมห้อง</span>
+          <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div class="my-3">
+          <span id="comfortStatus" class="text-2xl font-bold text-emerald-600">กำลังประมวลผล...</span>
+        </div>
+        <div id="comfortDesc" class="text-xs text-slate-500">
+          ระดับความสบายของสภาพอากาศในห้อง
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart & Time Controls -->
+    <div class="bg-white border border-sky-100 rounded-2xl p-6 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-800">กราฟวิเคราะห์แนวโน้ม (Trend Analytics)</h2>
+          <p class="text-xs text-slate-500">เปรียบเทียบค่าอุณหภูมิ (°C) และความชื้น (%) ย้อนหลัง</p>
+        </div>
+        
+        <!-- Filter Buttons -->
+        <div class="inline-flex p-1 bg-sky-50 rounded-xl border border-sky-100">
+          <button onclick="setFilter('10min')" id="btn-10min" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm">ราย 10 นาที</button>
+          <button onclick="setFilter('1hour')" id="btn-1hour" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700">ราย 1 ชั่วโมง</button>
+          <button onclick="setFilter('1day')"  id="btn-1day"  class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700">รายวัน/ทั้งหมด</button>
+        </div>
+      </div>
+
+      <!-- Canvas Chart -->
+      <div class="relative w-full h-80 md:h-96">
+        <canvas id="envChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Raw Data Section -->
+    <div class="bg-white border border-sky-100 rounded-2xl p-6 shadow-sm">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+        <div>
+          <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            ตารางข้อมูลดิบ (Raw Data Log)
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">เรียงลำดับรายการที่ถูกบันทึกล่าสุดไว้ด้านบนสุด (Descending Order)</p>
+        </div>
+        <div class="text-xs text-slate-500 font-medium">
+          แสดงทั้งหมด <span id="rawTableCount" class="text-emerald-600 font-bold">0</span> รายการ
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="overflow-x-auto rounded-xl border border-sky-100 max-h-96 overflow-y-auto">
+        <table class="w-full text-sm text-left text-slate-600">
+          <thead class="text-xs uppercase bg-sky-50 text-sky-800 border-b border-sky-100 sticky top-0">
+            <tr>
+              <th scope="col" class="px-4 py-3">ลำดับ</th>
+              <th scope="col" class="px-4 py-3">วันที่ (Date)</th>
+              <th scope="col" class="px-4 py-3">เวลา (Time)</th>
+              <th scope="col" class="px-4 py-3">อุณหภูมิ (°C)</th>
+              <th scope="col" class="px-4 py-3">ความชื้น (%)</th>
+              <th scope="col" class="px-4 py-3">สถานะ</th>
+            </tr>
+          </thead>
+          <tbody id="rawTableBody" class="divide-y divide-sky-50 bg-white">
+            <tr>
+              <td colspan="6" class="px-4 py-6 text-center text-slate-400">กำลังโหลดข้อมูลดิบ...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbweM8lM-we9g1ahbpvUyPwEoXTPgEni_k2uX_8gYm1oVro6aUUO5LrK6lp7m3oL-25ioA/exec";
+    
+    // Sample Fallback Data
+    const mockData = [
+      { date: "2026-11-04", time: "08:09:12", temp: 24.1, hum: 62.0 },
+      { date: "2026-11-04", time: "08:15:42", temp: 24.1, hum: 63.0 },
+      { date: "2026-11-04", time: "08:32:00", temp: 24.5, hum: 62.0 },
+      { date: "2026-11-04", time: "08:45:08", temp: 24.1, hum: 61.0 },
+      { date: "2026-11-04", time: "09:00:13", temp: 24.1, hum: 62.0 },
+      { date: "2026-11-04", time: "09:15:49", temp: 24.1, hum: 62.0 }
+    ];
+
+    let currentFilter = '10min';
+    let envChart = null;
+
+    function initChart() {
+      const ctx = document.getElementById('envChart').getContext('2d');
+      envChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: 'อุณหภูมิ (°C)',
+              data: [],
+              borderColor: '#059669',
+              backgroundColor: 'rgba(5, 150, 105, 0.08)',
+              borderWidth: 2,
+              tension: 0.3,
+              fill: true,
+              yAxisID: 'yTemp'
+            },
+            {
+              label: 'ความชื้น (%)',
+              data: [],
+              borderColor: '#0284c7',
+              backgroundColor: 'rgba(2, 132, 199, 0.08)',
+              borderWidth: 2,
+              tension: 0.3,
+              fill: true,
+              yAxisID: 'yHum'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: 'index', intersect: false },
+          plugins: {
+            legend: { labels: { color: '#334155', font: { family: 'Kanit' } } }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#64748b', font: { family: 'Kanit' } },
+              grid: { color: '#f1f5f9' }
+            },
+            yTemp: {
+              type: 'linear',
+              position: 'left',
+              ticks: { color: '#059669', font: { family: 'Kanit' } },
+              grid: { color: '#f1f5f9' },
+              title: { display: true, text: 'อุณหภูมิ (°C)', color: '#059669' }
+            },
+            yHum: {
+              type: 'linear',
+              position: 'right',
+              ticks: { color: '#0284c7', font: { family: 'Kanit' } },
+              grid: { drawOnChartArea: false },
+              title: { display: true, text: 'ความชื้น (%)', color: '#0284c7' }
+            }
+          }
+        }
+      });
+    }
+
+    async function fetchData() {
+      try {
+        const response = await fetch(`${WEB_APP_URL}?range=${currentFilter}`);
+        if (!response.ok) throw new Error("CORS or WebApp error");
+        const json = await response.json();
+        updateDashboard(json.data || json);
+      } catch (err) {
+        console.warn("ไม่สามารถดึงข้อมูลจาก WebApp ได้ ระบบกำลังใช้ข้อมูลจำลอง (Fallback Data)", err);
+        updateDashboard(mockData);
+      }
+    }
+
+    function updateDashboard(dataList) {
+      if (!dataList || dataList.length === 0) return;
+
+      const labels = dataList.map(item => item.time || item.Time || item.date || item.Date || "");
+      const temps = dataList.map(item => parseFloat(item.temp || item["Temp (C)"] || 0));
+      const hums = dataList.map(item => parseFloat(item.hum || item["Humidity (%)"] || 0));
+
+      const latestTemp = temps[temps.length - 1];
+      const latestHum = hums[hums.length - 1];
+
+      // Calculate Stats
+      const avgTemp = (temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1);
+      const minTemp = Math.min(...temps).toFixed(1);
+      const maxTemp = Math.max(...temps).toFixed(1);
+
+      const avgHum = (hums.reduce((a, b) => a + b, 0) / hums.length).toFixed(1);
+      const minHum = Math.min(...hums).toFixed(1);
+      const maxHum = Math.max(...hums).toFixed(1);
+
+      // DOM Updates
+      document.getElementById('currTemp').innerText = latestTemp.toFixed(1);
+      document.getElementById('avgTemp').innerText = `${avgTemp} °C`;
+      document.getElementById('minMaxTemp').innerText = `${minTemp} / ${maxTemp}`;
+
+      document.getElementById('currHum').innerText = latestHum.toFixed(1);
+      document.getElementById('avgHum').innerText = `${avgHum} %`;
+      document.getElementById('minMaxHum').innerText = `${minHum} / ${maxHum}`;
+
+      document.getElementById('recordCount').innerText = dataList.length;
+      document.getElementById('lastUpdated').innerText = labels[labels.length - 1] || new Date().toLocaleTimeString();
+
+      // Comfort Index Check
+      const statusEl = document.getElementById('comfortStatus');
+      const descEl = document.getElementById('comfortDesc');
+      if (latestTemp >= 22 && latestTemp <= 26 && latestHum >= 50 && latestHum <= 65) {
+        statusEl.innerText = "เย็นสบายพอดี";
+        statusEl.className = "text-2xl font-bold text-emerald-600";
+        descEl.innerText = "อุณหภูมิและความชื้นอยู่ในเกณฑ์สบายตัว";
+      } else if (latestTemp > 26) {
+        statusEl.innerText = "อากาศค่อนข้างร้อน";
+        statusEl.className = "text-2xl font-bold text-amber-600";
+        descEl.innerText = "ข้อแนะนำ: เปิดพัดลมหรือเครื่องปรับอากาศ";
+      } else {
+        statusEl.innerText = "ปกติ";
+        statusEl.className = "text-2xl font-bold text-sky-600";
+        descEl.innerText = "สภาพอากาศในห้องปกติ";
+      }
+
+      // Chart Update
+      envChart.data.labels = labels;
+      envChart.data.datasets[0].data = temps;
+      envChart.data.datasets[1].data = hums;
+      envChart.update();
+
+      // Render Raw Data Table
+      renderRawDataTable(dataList);
+    }
+
+    function renderRawDataTable(dataList) {
+      const tbody = document.getElementById('rawTableBody');
+      const countEl = document.getElementById('rawTableCount');
+      if (!tbody) return;
+
+      const reversedData = [...dataList].reverse();
+      countEl.innerText = reversedData.length;
+
+      tbody.innerHTML = '';
+      reversedData.forEach((item, index) => {
+        const dateStr = item.date || item.Date || "-";
+        const timeStr = item.time || item.Time || "-";
+        const tempVal = parseFloat(item.temp || item["Temp (C)"] || 0).toFixed(1);
+        const humVal = parseFloat(item.hum || item["Humidity (%)"] || 0).toFixed(1);
+
+        const tr = document.createElement('tr');
+        tr.className = index % 2 === 0 ? "bg-white hover:bg-sky-50/50 transition-colors" : "bg-slate-50/50 hover:bg-sky-50/50 transition-colors";
+
+        tr.innerHTML = `
+          <td class="px-4 py-2.5 font-mono text-xs text-slate-400">#${reversedData.length - index}</td>
+          <td class="px-4 py-2.5 font-mono text-xs text-slate-600">${dateStr}</td>
+          <td class="px-4 py-2.5 font-mono text-xs text-sky-700 font-semibold">${timeStr}</td>
+          <td class="px-4 py-2.5 font-semibold text-emerald-600">${tempVal} °C</td>
+          <td class="px-4 py-2.5 font-semibold text-sky-600">${humVal} %</td>
+          <td class="px-4 py-2.5 text-xs">
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ปกติ
+            </span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function setFilter(filterType) {
+      currentFilter = filterType;
+      ['10min', '1hour', '1day'].forEach(f => {
+        const btn = document.getElementById(`btn-${f}`);
+        if (f === filterType) {
+          btn.className = "px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm";
+        } else {
+          btn.className = "px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700";
+        }
+      });
+      fetchData();
+    }
+
+    // Auto Init
+    window.onload = () => {
+      initChart();
+      fetchData();
+      setInterval(fetchData, 30000);
+    };
+  </script>
+</body>
+</html>
