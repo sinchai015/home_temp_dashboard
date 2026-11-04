@@ -82,17 +82,20 @@
         </div>
       </div>
 
-      <!-- Status Comfort Card -->
+      <!-- Status Comfort & Trend Analytics Card -->
       <div class="bg-white border border-emerald-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
-          <span class="text-sm font-medium">สภาวะแวดล้อมห้อง</span>
+          <span class="text-sm font-medium">วิเคราะห์แนวโน้ม & สภาวะห้อง</span>
           <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         </div>
-        <div class="my-3">
-          <span id="comfortStatus" class="text-2xl font-bold text-emerald-600">กำลังประมวลผล...</span>
+        <div class="my-2">
+          <div id="comfortStatus" class="text-xl font-bold text-emerald-600">กำลังประมวลผล...</div>
+          <div id="trendAnalyticsBadge" class="mt-1 text-xs font-medium text-slate-600 flex items-center gap-1.5">
+            <!-- Dynamic Trend Indicator -->
+          </div>
         </div>
-        <div id="comfortDesc" class="text-xs text-slate-500">
-          ระดับความสบายของสภาพอากาศในห้อง
+        <div id="comfortDesc" class="text-xs text-slate-500 border-t border-slate-100 pt-2 mt-1">
+          ระดับความสบายและอัตราการเปลี่ยนแปลงของอากาศ
         </div>
       </div>
     </div>
@@ -148,12 +151,18 @@
           </h2>
           <p class="text-xs text-slate-500 mt-0.5">เรียงลำดับรายการที่ถูกบันทึกล่าสุดไว้ด้านบนสุด (Descending Order)</p>
         </div>
-        <div class="text-xs text-slate-500 font-medium">
-          แสดงทั้งหมด <span id="rawTableCount" class="text-emerald-600 font-bold">0</span> รายการ
+        <div class="flex items-center gap-3">
+          <div class="text-xs text-slate-500 font-medium">
+            แสดงทั้งหมด <span id="rawTableCount" class="text-emerald-600 font-bold">0</span> รายการ
+          </div>
+          <!-- ปุ่ม Export CSV -->
+          <button onclick="exportToCSV()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-medium rounded-xl transition-all shadow-sm">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+            ดาวน์โหลด CSV
+          </button>
         </div>
       </div>
 
-      <!-- Table Container -->
       <div class="overflow-x-auto rounded-xl border border-sky-100 max-h-96 overflow-y-auto">
         <table class="w-full text-sm text-left text-slate-600">
           <thead class="text-xs uppercase bg-sky-50 text-sky-800 border-b border-sky-100 sticky top-0">
@@ -180,7 +189,7 @@
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbweM8lM-we9g1ahbpvUyPwEoXTPgEni_k2uX_8gYm1oVro6aUUO5LrK6lp7m3oL-25ioA/exec";
     
-    // Sample Fallback Data (ครอบคลุมรูปแบบข้อมูลชีต DHT_11)
+    // Sample Fallback Data
     const mockData = [
       { date: "2026-11-04", time: "08:09:12", temp: 24.1, hum: 62.0 },
       { date: "2026-11-04", time: "08:15:42", temp: 24.1, hum: 63.0 },
@@ -197,6 +206,55 @@
     let selectedCustomDate = '';
     let rawDataStore = [];
     let envChart = null;
+
+    // ฟังก์ชันดึงเฉพาะ HH:mm:ss ตัดข้อความ GMT / เวลาอินโดจีน / 1899 ออก 100%
+    function formatTimeOnly(str) {
+      if (!str) return "--:--:--";
+      const val = String(str);
+      // ค้นหาชุดตัวเลข HH:mm:ss ด้วย Regex
+      const match = val.match(/\b([01]?\d|2[0-3]):[0-5]\d:[0-5]\d\b/);
+      if (match) return match[0];
+      return val;
+    }
+
+    // ฟังก์ชันดึงเฉพาะ YYYY-MM-DD ตัดข้อความ GMT / เวลาอินโดจีน ออก 100%
+    function formatDateOnly(str) {
+      if (!str) return "----/--/--";
+      const val = String(str);
+      
+      // กรณีมีรูปแบบ YYYY-MM-DD
+      const matchISO = val.match(/\b\d{4}-\d{2}-\d{2}\b/);
+      if (matchISO) return matchISO[0];
+
+      // กรณีแปลงเป็นวัตถุ Date ภาษาอังกฤษ เช่น "Wed Nov 04 2026..."
+      const d = new Date(val);
+      if (!isNaN(d.getTime())) {
+        const y = d.getFullYear();
+        // ถ้าได้ปี 1899 แสดงว่าเป็นค่าเวลา ให้คืนค่าเป็นวันที่ปัจจุบัน
+        if (y < 1970) {
+          return new Date().toISOString().split('T')[0];
+        }
+        const m = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${y}-${m}-${day}`;
+      }
+
+      return val;
+    }
+
+    // Helper: Parse Date & Time safely to Timestamp
+    function parseTimestamp(item) {
+      const d = formatDateOnly(item.date || item.Date || "");
+      const t = formatTimeOnly(item.time || item.Time || "");
+      if (!d) return 0;
+      const parsed = new Date(`${d}T${t}`);
+      return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+    }
+
+    // Sort items chronologically (Ascending: Oldest -> Newest)
+    function sortDataChronologically(dataList) {
+      return [...dataList].sort((a, b) => parseTimestamp(a) - parseTimestamp(b));
+    }
 
     function initChart() {
       const ctx = document.getElementById('envChart').getContext('2d');
@@ -267,11 +325,11 @@
         const response = await fetch(url);
         if (!response.ok) throw new Error("CORS or WebApp error");
         const json = await response.json();
-        rawDataStore = json.data || json;
+        rawDataStore = sortDataChronologically(json.data || json);
         processAndUpdate();
       } catch (err) {
         console.warn("ไม่สามารถดึงข้อมูลจาก WebApp ได้ ระบบกำลังใช้ข้อมูลจำลอง (Fallback Data)", err);
-        rawDataStore = mockData;
+        rawDataStore = sortDataChronologically(mockData);
         processAndUpdate();
       }
     }
@@ -279,21 +337,23 @@
     function filterDataByRange(dataList) {
       if (!dataList || dataList.length === 0) return [];
       
+      let sorted = sortDataChronologically(dataList);
+
       // Filter by custom date if set
-      let filtered = dataList;
       if (selectedCustomDate) {
-        filtered = filtered.filter(item => {
-          const d = item.date || item.Date || "";
+        sorted = sorted.filter(item => {
+          const d = formatDateOnly(item.date || item.Date || "");
           return d === selectedCustomDate;
         });
       }
 
+      if (sorted.length === 0) return [];
+
       if (currentFilter === 'realtime') {
-        // ดึง 20 รายการล่าสุดสำหรับกราฟ Real-time
-        return filtered.slice(-20);
+        // ดึง 20 รายการล่าสุดอย่างแม่นยำ
+        return sorted.slice(-20);
       }
 
-      // คำนวณช่วงเวลาย้อนหลังอิงตาม Timestamp หรือ Index
       const minutesMap = {
         '5min': 5,
         '15min': 15,
@@ -303,41 +363,44 @@
       };
 
       const targetMinutes = minutesMap[currentFilter];
-      if (!targetMinutes) return filtered;
+      if (!targetMinutes) return sorted;
 
-      // พยายามคำนวณตามเวลาของจุดข้อมูลล่าสุด
-      const lastItem = filtered[filtered.length - 1];
-      if (lastItem && (lastItem.date || lastItem.Date) && (lastItem.time || lastItem.Time)) {
-        const lastDateTime = new Date(`${lastItem.date || lastItem.Date} ${lastItem.time || lastItem.Time}`);
-        if (!isNaN(lastDateTime.getTime())) {
-          const cutoffTime = new Date(lastDateTime.getTime() - targetMinutes * 60000);
-          return filtered.filter(item => {
-            const itemDateTime = new Date(`${item.date || item.Date} ${item.time || item.Time}`);
-            return !isNaN(itemDateTime.getTime()) && itemDateTime >= cutoffTime;
-          });
-        }
+      // Filter by precise Timestamp range
+      const lastItemTime = parseTimestamp(sorted[sorted.length - 1]);
+      if (lastItemTime > 0) {
+        const cutoffTime = lastItemTime - (targetMinutes * 60000);
+        return sorted.filter(item => parseTimestamp(item) >= cutoffTime);
       }
 
-      // หากแปลง Date ไม่สำเร็จ ให้ดึงจำนวนจุดข้อมูลประมาณการ (ถือว่าบันทึกทุก 30 วินาที)
-      const countMap = {
-        '5min': 10,
-        '15min': 30,
-        '30min': 60,
-        '1hour': 120,
-        '24hour': 2880
-      };
-      return filtered.slice(-(countMap[currentFilter] || 30));
+      return sorted;
     }
 
     function processAndUpdate() {
       const filteredList = filterDataByRange(rawDataStore);
-      updateDashboard(filteredList.length > 0 ? filteredList : rawDataStore);
+      updateDashboard(filteredList);
     }
 
     function updateDashboard(dataList) {
-      if (!dataList || dataList.length === 0) return;
+      if (!dataList || dataList.length === 0) {
+        // Clear Dashboard metrics when no data matched
+        document.getElementById('currTemp').innerText = "--";
+        document.getElementById('currHum').innerText = "--";
+        document.getElementById('recordCount').innerText = "0";
+        document.getElementById('comfortStatus').innerText = "ไม่พบข้อมูลในช่วงที่เลือก";
+        document.getElementById('comfortStatus').className = "text-lg font-bold text-rose-500";
+        document.getElementById('trendAnalyticsBadge').innerHTML = "ไม่มีข้อมูลตามเงื่อนไขการกรอง";
+        if (envChart) {
+          envChart.data.labels = [];
+          envChart.data.datasets[0].data = [];
+          envChart.data.datasets[1].data = [];
+          envChart.update();
+        }
+        renderRawDataTable([]);
+        return;
+      }
 
-      const labels = dataList.map(item => item.time || item.Time || item.date || item.Date || "");
+      // ใช้เฉพาะเวลา HH:mm:ss ปล่อยบนแกน X ของกราฟ
+      const labels = dataList.map(item => formatTimeOnly(item.time || item.Time || ""));
       const temps = dataList.map(item => parseFloat(item.temp || item["Temp (C)"] || 0));
       const hums = dataList.map(item => parseFloat(item.hum || item["Humidity (%)"] || 0));
 
@@ -365,21 +428,43 @@
       document.getElementById('recordCount').innerText = dataList.length;
       document.getElementById('lastUpdated').innerText = labels[labels.length - 1] || new Date().toLocaleTimeString();
 
+      // คำนวณ Trend Analytics (อัตราการเปลี่ยนแปลงและความสัมพันธ์)
+      const firstTemp = temps[0];
+      const tempDelta = (latestTemp - firstTemp).toFixed(1);
+      const firstHum = hums[0];
+      const humDelta = (latestHum - firstHum).toFixed(1);
+
+      let trendBadgeHTML = "";
+      if (tempDelta > 0) {
+        trendBadgeHTML += `<span class="text-rose-600 font-semibold">▲ อุณหภูมิเพิ่มขึ้น +${tempDelta}°C</span>`;
+      } else if (tempDelta < 0) {
+        trendBadgeHTML += `<span class="text-emerald-600 font-semibold">▼ อุณหภูมิลดลง ${tempDelta}°C</span>`;
+      } else {
+        trendBadgeHTML += `<span class="text-slate-600 font-semibold">► อุณหภูมิคงที่</span>`;
+      }
+
+      if (humDelta > 0) {
+        trendBadgeHTML += `<span class="text-sky-600 font-semibold ml-2">(ความชื้น +${humDelta}%)</span>`;
+      } else if (humDelta < 0) {
+        trendBadgeHTML += `<span class="text-amber-600 font-semibold ml-2">(ความชื้น ${humDelta}%)</span>`;
+      }
+      document.getElementById('trendAnalyticsBadge').innerHTML = trendBadgeHTML;
+
       // Comfort Index Check
       const statusEl = document.getElementById('comfortStatus');
       const descEl = document.getElementById('comfortDesc');
       if (latestTemp >= 22 && latestTemp <= 26 && latestHum >= 50 && latestHum <= 65) {
         statusEl.innerText = "เย็นสบายพอดี";
-        statusEl.className = "text-2xl font-bold text-emerald-600";
-        descEl.innerText = "อุณหภูมิและความชื้นอยู่ในเกณฑ์สบายตัว";
+        statusEl.className = "text-xl font-bold text-emerald-600";
+        descEl.innerText = `อุณหภูมิและความชื้นอยู่ในเกณฑ์สบายตัว (เปลี่ยนแปลง ${tempDelta}°C ในช่วงเวลานี้)`;
       } else if (latestTemp > 26) {
         statusEl.innerText = "อากาศค่อนข้างร้อน";
-        statusEl.className = "text-2xl font-bold text-amber-600";
-        descEl.innerText = "ข้อแนะนำ: เปิดพัดลมหรือเครื่องปรับอากาศ";
+        statusEl.className = "text-xl font-bold text-amber-600";
+        descEl.innerText = `ข้อแนะนำ: เปิดพัดลมหรือแอร์ (อุณหภูมิมีแนวโน้ม ${tempDelta > 0 ? 'สูงขึ้น' : 'ทรงตัว'})`;
       } else {
         statusEl.innerText = "ปกติ";
-        statusEl.className = "text-2xl font-bold text-sky-600";
-        descEl.innerText = "สภาพอากาศในห้องปกติ";
+        statusEl.className = "text-xl font-bold text-sky-600";
+        descEl.innerText = `สภาพอากาศในห้องปกติ (อัตราเปลี่ยน: ${tempDelta}°C)`;
       }
 
       // Chart Update
@@ -388,7 +473,7 @@
       envChart.data.datasets[1].data = hums;
       envChart.update();
 
-      // Render Raw Data Table
+      // Render Raw Data Table (เรียงล่าสุดอยู่บนเสมอ)
       renderRawDataTable(dataList);
     }
 
@@ -397,13 +482,20 @@
       const countEl = document.getElementById('rawTableCount');
       if (!tbody) return;
 
-      const reversedData = [...dataList].reverse();
-      countEl.innerText = reversedData.length;
+      if (!dataList || dataList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-slate-400">ไม่พบรายการข้อมูล</td></tr>';
+        if (countEl) countEl.innerText = "0";
+        return;
+      }
+
+      // เรียงลำดับจากใหม่ไปเก่าอย่างถูกต้องเสมอ (Descending Order)
+      const sortedNewestFirst = sortDataChronologically(dataList).reverse();
+      countEl.innerText = sortedNewestFirst.length;
 
       tbody.innerHTML = '';
-      reversedData.forEach((item, index) => {
-        const dateStr = item.date || item.Date || "-";
-        const timeStr = item.time || item.Time || "-";
+      sortedNewestFirst.forEach((item, index) => {
+        const dateStr = formatDateOnly(item.date || item.Date || "-");
+        const timeStr = formatTimeOnly(item.time || item.Time || "-");
         const tempVal = parseFloat(item.temp || item["Temp (C)"] || 0).toFixed(1);
         const humVal = parseFloat(item.hum || item["Humidity (%)"] || 0).toFixed(1);
 
@@ -411,7 +503,7 @@
         tr.className = index % 2 === 0 ? "bg-white hover:bg-sky-50/50 transition-colors" : "bg-slate-50/50 hover:bg-sky-50/50 transition-colors";
 
         tr.innerHTML = `
-          <td class="px-4 py-2.5 font-mono text-xs text-slate-400">#${reversedData.length - index}</td>
+          <td class="px-4 py-2.5 font-mono text-xs text-slate-400">#${sortedNewestFirst.length - index}</td>
           <td class="px-4 py-2.5 font-mono text-xs text-slate-600">${dateStr}</td>
           <td class="px-4 py-2.5 font-mono text-xs text-sky-700 font-semibold">${timeStr}</td>
           <td class="px-4 py-2.5 font-semibold text-emerald-600">${tempVal} °C</td>
@@ -440,7 +532,8 @@
         }
       });
 
-      processAndUpdate();
+      // ข้อ 2: ดึงข้อมูลใหม่จาก Server เมื่อเปลี่ยนช่วงเวลา
+      fetchData();
     }
 
     function onDateChange(dateValue) {
@@ -462,7 +555,42 @@
       fetchData();
     }
 
-    // Auto Init
+    // ฟังก์ชันสำหรับส่งออกข้อมูลตารางเป็นไฟล์ CSV
+    function exportToCSV() {
+      const filteredList = filterDataByRange(rawDataStore);
+      if (!filteredList || filteredList.length === 0) {
+        alert("ไม่พบข้อมูลสำหรับการส่งออกไฟล์ CSV");
+        return;
+      }
+
+      const sortedNewestFirst = sortDataChronologically(filteredList).reverse();
+      
+      // สร้างเนื้อหา CSV (ใส่ BOM \uFEFF เพื่อให้ Excel อ่านภาษาไทยถูกต้อง)
+      let csvContent = "\uFEFFลำดับ,วันที่ (Date),เวลา (Time),อุณหภูมิ (°C),ความชื้น (%)\n";
+      
+      sortedNewestFirst.forEach((item, index) => {
+        const dateStr = formatDateOnly(item.date || item.Date || "-");
+        const timeStr = formatTimeOnly(item.time || item.Time || "-");
+        const tempVal = parseFloat(item.temp || item["Temp (C)"] || 0).toFixed(1);
+        const humVal = parseFloat(item.hum || item["Humidity (%)"] || 0).toFixed(1);
+        const rowNo = sortedNewestFirst.length - index;
+
+        csvContent += `"${rowNo}","${dateStr}","${timeStr}","${tempVal}","${humVal}"\n`;
+      });
+
+      // สร้างไฟล์ดาวน์โหลดผ่าน Data URI
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      
+      const todayStr = new Date().toISOString().split('T')[0];
+      link.setAttribute("href", url);
+      link.setAttribute("download", `DHT11_Environment_Log_${todayStr}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     window.onload = () => {
       initChart();
       fetchData();
