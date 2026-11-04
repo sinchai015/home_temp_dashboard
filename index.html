@@ -99,17 +99,36 @@
 
     <!-- Chart & Time Controls -->
     <div class="bg-white border border-sky-100 rounded-2xl p-6 shadow-sm">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
-          <h2 class="text-lg font-semibold text-slate-800">กราฟวิเคราะห์แนวโน้ม (Trend Analytics)</h2>
-          <p class="text-xs text-slate-500">เปรียบเทียบค่าอุณหภูมิ (°C) และความชื้น (%) ย้อนหลัง</p>
+          <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+            <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+            กราฟวิเคราะห์แนวโน้ม (Trend Analytics)
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">เปรียบเทียบค่าอุณหภูมิ (°C) และความชื้น (%) ตามช่วงเวลาที่ต้องการ</p>
         </div>
         
-        <!-- Filter Buttons -->
-        <div class="inline-flex p-1 bg-sky-50 rounded-xl border border-sky-100">
-          <button onclick="setFilter('10min')" id="btn-10min" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm">ราย 10 นาที</button>
-          <button onclick="setFilter('1hour')" id="btn-1hour" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700">ราย 1 ชั่วโมง</button>
-          <button onclick="setFilter('1day')"  id="btn-1day"  class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700">รายวัน/ทั้งหมด</button>
+        <!-- Filter Controls Container -->
+        <div class="flex flex-wrap items-center gap-3">
+          <!-- Time Buttons Group -->
+          <div class="inline-flex p-1 bg-sky-50/80 rounded-xl border border-sky-100 overflow-x-auto max-w-full">
+            <button onclick="setFilter('realtime')" id="btn-realtime" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> เรียลไทม์
+            </button>
+            <button onclick="setFilter('5min')" id="btn-5min" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">5 นาที</button>
+            <button onclick="setFilter('15min')" id="btn-15min" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">15 นาที</button>
+            <button onclick="setFilter('30min')" id="btn-30min" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">30 นาที</button>
+            <button onclick="setFilter('1hour')" id="btn-1hour" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">1 ชั่วโมง</button>
+            <button onclick="setFilter('24hour')" id="btn-24hour" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">24 ชั่วโมง</button>
+          </div>
+
+          <!-- Custom Date Picker -->
+          <div class="flex items-center gap-1.5 bg-slate-50 p-1 rounded-xl border border-sky-100">
+            <input type="date" id="filterDatePicker" onchange="onDateChange(this.value)" class="bg-white text-xs text-slate-700 font-medium px-2.5 py-1.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-400">
+            <button onclick="clearDateFilter()" id="btnClearDate" class="hidden px-2 py-1.5 text-xs text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg font-medium transition-all" title="ล้างการกรองวันที่">
+              ✕ ล้าง
+            </button>
+          </div>
         </div>
       </div>
 
@@ -161,17 +180,22 @@
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbweM8lM-we9g1ahbpvUyPwEoXTPgEni_k2uX_8gYm1oVro6aUUO5LrK6lp7m3oL-25ioA/exec";
     
-    // Sample Fallback Data
+    // Sample Fallback Data (ครอบคลุมรูปแบบข้อมูลชีต DHT_11)
     const mockData = [
       { date: "2026-11-04", time: "08:09:12", temp: 24.1, hum: 62.0 },
       { date: "2026-11-04", time: "08:15:42", temp: 24.1, hum: 63.0 },
       { date: "2026-11-04", time: "08:32:00", temp: 24.5, hum: 62.0 },
       { date: "2026-11-04", time: "08:45:08", temp: 24.1, hum: 61.0 },
       { date: "2026-11-04", time: "09:00:13", temp: 24.1, hum: 62.0 },
-      { date: "2026-11-04", time: "09:15:49", temp: 24.1, hum: 62.0 }
+      { date: "2026-11-04", time: "09:15:49", temp: 24.1, hum: 62.0 },
+      { date: "2026-11-04", time: "10:00:00", temp: 25.0, hum: 60.5 },
+      { date: "2026-11-04", time: "10:30:00", temp: 25.8, hum: 58.0 },
+      { date: "2026-11-04", time: "11:00:00", temp: 26.2, hum: 57.2 }
     ];
 
-    let currentFilter = '10min';
+    let currentFilter = 'realtime';
+    let selectedCustomDate = '';
+    let rawDataStore = [];
     let envChart = null;
 
     function initChart() {
@@ -236,14 +260,78 @@
 
     async function fetchData() {
       try {
-        const response = await fetch(`${WEB_APP_URL}?range=${currentFilter}`);
+        let url = `${WEB_APP_URL}?range=${currentFilter}`;
+        if (selectedCustomDate) {
+          url += `&date=${selectedCustomDate}`;
+        }
+        const response = await fetch(url);
         if (!response.ok) throw new Error("CORS or WebApp error");
         const json = await response.json();
-        updateDashboard(json.data || json);
+        rawDataStore = json.data || json;
+        processAndUpdate();
       } catch (err) {
         console.warn("ไม่สามารถดึงข้อมูลจาก WebApp ได้ ระบบกำลังใช้ข้อมูลจำลอง (Fallback Data)", err);
-        updateDashboard(mockData);
+        rawDataStore = mockData;
+        processAndUpdate();
       }
+    }
+
+    function filterDataByRange(dataList) {
+      if (!dataList || dataList.length === 0) return [];
+      
+      // Filter by custom date if set
+      let filtered = dataList;
+      if (selectedCustomDate) {
+        filtered = filtered.filter(item => {
+          const d = item.date || item.Date || "";
+          return d === selectedCustomDate;
+        });
+      }
+
+      if (currentFilter === 'realtime') {
+        // ดึง 20 รายการล่าสุดสำหรับกราฟ Real-time
+        return filtered.slice(-20);
+      }
+
+      // คำนวณช่วงเวลาย้อนหลังอิงตาม Timestamp หรือ Index
+      const minutesMap = {
+        '5min': 5,
+        '15min': 15,
+        '30min': 30,
+        '1hour': 60,
+        '24hour': 1440
+      };
+
+      const targetMinutes = minutesMap[currentFilter];
+      if (!targetMinutes) return filtered;
+
+      // พยายามคำนวณตามเวลาของจุดข้อมูลล่าสุด
+      const lastItem = filtered[filtered.length - 1];
+      if (lastItem && (lastItem.date || lastItem.Date) && (lastItem.time || lastItem.Time)) {
+        const lastDateTime = new Date(`${lastItem.date || lastItem.Date} ${lastItem.time || lastItem.Time}`);
+        if (!isNaN(lastDateTime.getTime())) {
+          const cutoffTime = new Date(lastDateTime.getTime() - targetMinutes * 60000);
+          return filtered.filter(item => {
+            const itemDateTime = new Date(`${item.date || item.Date} ${item.time || item.Time}`);
+            return !isNaN(itemDateTime.getTime()) && itemDateTime >= cutoffTime;
+          });
+        }
+      }
+
+      // หากแปลง Date ไม่สำเร็จ ให้ดึงจำนวนจุดข้อมูลประมาณการ (ถือว่าบันทึกทุก 30 วินาที)
+      const countMap = {
+        '5min': 10,
+        '15min': 30,
+        '30min': 60,
+        '1hour': 120,
+        '24hour': 2880
+      };
+      return filtered.slice(-(countMap[currentFilter] || 30));
+    }
+
+    function processAndUpdate() {
+      const filteredList = filterDataByRange(rawDataStore);
+      updateDashboard(filteredList.length > 0 ? filteredList : rawDataStore);
     }
 
     function updateDashboard(dataList) {
@@ -340,14 +428,37 @@
 
     function setFilter(filterType) {
       currentFilter = filterType;
-      ['10min', '1hour', '1day'].forEach(f => {
+      const allFilters = ['realtime', '5min', '15min', '30min', '1hour', '24hour'];
+      
+      allFilters.forEach(f => {
         const btn = document.getElementById(`btn-${f}`);
+        if (!btn) return;
         if (f === filterType) {
-          btn.className = "px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm";
+          btn.className = "px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm flex items-center gap-1.5 whitespace-nowrap";
         } else {
-          btn.className = "px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700";
+          btn.className = "px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap";
         }
       });
+
+      processAndUpdate();
+    }
+
+    function onDateChange(dateValue) {
+      selectedCustomDate = dateValue;
+      const clearBtn = document.getElementById('btnClearDate');
+      if (dateValue) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      fetchData();
+    }
+
+    function clearDateFilter() {
+      selectedCustomDate = '';
+      const dateInput = document.getElementById('filterDatePicker');
+      if (dateInput) dateInput.value = '';
+      document.getElementById('btnClearDate').classList.add('hidden');
       fetchData();
     }
 
