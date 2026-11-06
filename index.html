@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน</title>
+  <title>ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน Benz_Za</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
@@ -115,11 +115,9 @@
         <div class="flex flex-wrap items-center gap-3">
           <!-- Time Buttons Group -->
           <div class="inline-flex p-1 bg-sky-50/80 rounded-xl border border-sky-100 overflow-x-auto max-w-full">
-            <button onclick="setFilter('realtime')" id="btn-realtime" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> เรียลไทม์ (วันนี้)
+            <button onclick="setFilter('5min')" id="btn-5min" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> เรียลไทม์
             </button>
-            <button onclick="setFilter('5min')" id="btn-5min" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">เฉลี่ย 5 นาที</button>
-            <button onclick="setFilter('15min')" id="btn-15min" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">เฉลี่ย 15 นาที</button>
             <button onclick="setFilter('30min')" id="btn-30min" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">เฉลี่ย 30 นาที</button>
             <button onclick="setFilter('1hour')" id="btn-1hour" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">เฉลี่ย 1 ชั่วโมง</button>
             <button onclick="setFilter('24hour')" id="btn-24hour" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">ภาพรวมรายวัน (เดือนนี้)</button>
@@ -209,7 +207,7 @@
       { date: "2026-11-04", time: "11:00:00", temp: 26.2, hum: 57.2 }
     ];
 
-    let currentFilter = 'realtime';
+    let currentFilter = '5min';
     let selectedCustomDate = '';
     let rawDataStore = [];
     let envChart = null;
@@ -378,12 +376,7 @@
 
       if (sorted.length === 0) return [];
 
-      // 1. เรียลไทม์: แสดงจุดข้อมูลทั้งหมดของวันนั้นตรงๆ ไม่ต้องเฉลี่ย
-      if (currentFilter === 'realtime') {
-        return sorted;
-      }
-
-      // 2. 24 ชั่วโมง: ภาพรวมรายวันในเดือนนั้นๆ
+      // 1. 24 ชั่วโมง: ภาพรวมรายวันในเดือนนั้นๆ
       if (currentFilter === '24hour') {
         const dayGroups = {};
         sorted.forEach(item => {
@@ -407,10 +400,9 @@
         });
       }
 
-      // 3. 5 นาที, 15 นาที, 30 นาที, 1 ชั่วโมง: รวมกลุ่มภายในวันนั้นและหาค่าเฉลี่ยตามช่วงเวลา
+      // 2. เรียลไทม์ (5 นาที), 30 นาที, 1 ชั่วโมง: รวมกลุ่มภายในวันนั้นและหาค่าเฉลี่ยตามช่วงเวลา
       const minuteIntervals = {
         '5min': 5,
-        '15min': 15,
         '30min': 30,
         '1hour': 60
       };
@@ -631,7 +623,7 @@
 
     function setFilter(filterType) {
       currentFilter = filterType;
-      const allFilters = ['realtime', '5min', '15min', '30min', '1hour', '24hour'];
+      const allFilters = ['5min', '30min', '1hour', '24hour'];
       
       allFilters.forEach(f => {
         const btn = document.getElementById(`btn-${f}`);
