@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน Benz_Za</title>
+  <title>ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน602/262</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
@@ -19,7 +19,7 @@
     <!-- Header -->
     <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-sky-100 shadow-sm">
       <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-sky-700">ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-sky-700">ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน602/262</h1>
         <p class="text-slate-500 text-sm mt-1">Home Temperature & Humidity Monitoring Dashboard (DHT11)</p>
       </div>
       <div class="flex items-center gap-3">
@@ -33,9 +33,8 @@
       </div>
     </header>
 
-    <!-- Cards Summary -->
+    <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-      <!-- Temp Current -->
       <div class="bg-white border border-emerald-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
           <span class="text-sm font-medium">อุณหภูมิปัจจุบัน</span>
@@ -51,7 +50,6 @@
         </div>
       </div>
 
-      <!-- Humidity Current -->
       <div class="bg-white border border-sky-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
           <span class="text-sm font-medium">ความชื้นปัจจุบัน</span>
@@ -67,7 +65,6 @@
         </div>
       </div>
 
-      <!-- Total Readings -->
       <div class="bg-white border border-sky-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
           <span class="text-sm font-medium">จำนวนจุดบันทึก (ช่วงที่เลือก)</span>
@@ -82,7 +79,6 @@
         </div>
       </div>
 
-      <!-- Status Comfort & Trend Analytics Card -->
       <div class="bg-white border border-emerald-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
           <span class="text-sm font-medium">วิเคราะห์แนวโน้ม & สภาวะห้อง</span>
@@ -90,9 +86,7 @@
         </div>
         <div class="my-2">
           <div id="comfortStatus" class="text-xl font-bold text-emerald-600">กำลังประมวลผล...</div>
-          <div id="trendAnalyticsBadge" class="mt-1 text-xs font-medium text-slate-600 flex items-center gap-1.5">
-            <!-- Dynamic Trend Indicator -->
-          </div>
+          <div id="trendAnalyticsBadge" class="mt-1 text-xs font-medium text-slate-600 flex items-center gap-1.5"></div>
         </div>
         <div id="comfortDesc" class="text-xs text-slate-500 border-t border-slate-100 pt-2 mt-1">
           ระดับความสบายและอัตราการเปลี่ยนแปลงของอากาศ
@@ -100,7 +94,7 @@
       </div>
     </div>
 
-    <!-- Chart & Time Controls -->
+    <!-- Chart & Filter Controls -->
     <div class="bg-white border border-sky-100 rounded-2xl p-6 shadow-sm">
       <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
@@ -111,11 +105,9 @@
           <p class="text-xs text-slate-500 mt-0.5">เปรียบเทียบค่าอุณหภูมิ (°C) และความชื้น (%) ตามช่วงเวลาที่ต้องการ</p>
         </div>
         
-        <!-- Filter Controls Container -->
         <div class="flex flex-wrap items-center gap-3">
-          <!-- Time Buttons Group -->
           <div class="inline-flex p-1 bg-sky-50/80 rounded-xl border border-sky-100 overflow-x-auto max-w-full">
-            <button onclick="setFilter('5min')" id="btn-5min" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+            <button onclick="setFilter('realtime')" id="btn-realtime" class="px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> เรียลไทม์
             </button>
             <button onclick="setFilter('30min')" id="btn-30min" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">เฉลี่ย 30 นาที</button>
@@ -123,29 +115,26 @@
             <button onclick="setFilter('24hour')" id="btn-24hour" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">ภาพรวมรายวัน (เดือนนี้)</button>
           </div>
 
-          <!-- Custom Date Picker -->
           <div class="flex items-center gap-1.5 bg-slate-50 p-1 rounded-xl border border-sky-100">
             <input type="date" id="filterDatePicker" onchange="onDateChange(this.value)" class="bg-white text-xs text-slate-700 font-medium px-2.5 py-1.5 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-400">
-            <button onclick="clearDateFilter()" id="btnClearDate" class="hidden px-2 py-1.5 text-xs text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg font-medium transition-all" title="ล้างการกรองวันที่">
+            <button onclick="clearDateFilter()" id="btnClearDate" class="hidden px-2 py-1.5 text-xs text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-lg font-medium transition-all">
               ✕ ล้าง
             </button>
           </div>
 
-          <!-- Export Chart PNG Button -->
-          <button onclick="exportChartImage()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 text-xs font-medium rounded-xl transition-all shadow-sm">
+          <button onclick="exportChartImage()" class="px-3 py-1.5 text-xs font-medium rounded-xl text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 flex items-center gap-1.5 transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
             ส่งออกรูปกราฟ PNG
           </button>
         </div>
       </div>
 
-      <!-- Canvas Chart Element -->
       <div class="relative w-full h-80 md:h-96">
         <canvas id="envChart"></canvas>
       </div>
     </div>
 
-    <!-- Raw Data Section -->
+    <!-- Raw Data Log Table -->
     <div class="bg-white border border-sky-100 rounded-2xl p-6 shadow-sm">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div>
@@ -156,11 +145,10 @@
           <p class="text-xs text-slate-500 mt-0.5">เรียงลำดับรายการที่ถูกบันทึกล่าสุดไว้ด้านบนสุด (Descending Order)</p>
         </div>
         <div class="flex items-center gap-3">
-          <div class="text-xs text-slate-500 font-medium">
+          <span class="text-xs text-slate-500 font-medium">
             แสดงทั้งหมด <span id="rawTableCount" class="text-emerald-600 font-bold">0</span> รายการ
-          </div>
-          <!-- CSV Download Button -->
-          <button onclick="exportToCSV()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 text-xs font-medium rounded-xl transition-all shadow-sm">
+          </span>
+          <button onclick="exportToCSV()" class="px-3 py-1.5 text-xs font-medium rounded-xl text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 flex items-center gap-1.5 transition-all">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             ดาวน์โหลด CSV
           </button>
@@ -192,99 +180,29 @@
 
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbweM8lM-we9g1ahbpvUyPwEoXTPgEni_k2uX_8gYm1oVro6aUUO5LrK6lp7m3oL-25ioA/exec";
-    
-    // Sample Fallback Data
-    const mockData = [
-      { date: "2026-11-04", time: "08:09:12", temp: 24.1, hum: 62.0 },
-      { date: "2026-11-04", time: "08:11:41", temp: 24.0, hum: 63.2 },
-      { date: "2026-11-04", time: "08:15:42", temp: 24.1, hum: 63.0 },
-      { date: "2026-11-04", time: "08:32:00", temp: 24.5, hum: 62.0 },
-      { date: "2026-11-04", time: "08:45:08", temp: 24.1, hum: 61.0 },
-      { date: "2026-11-04", time: "09:00:13", temp: 24.1, hum: 62.0 },
-      { date: "2026-11-04", time: "09:15:49", temp: 24.1, hum: 62.0 },
-      { date: "2026-11-04", time: "10:00:00", temp: 25.0, hum: 60.5 },
-      { date: "2026-11-04", time: "10:30:00", temp: 25.8, hum: 58.0 },
-      { date: "2026-11-04", time: "11:00:00", temp: 26.2, hum: 57.2 }
-    ];
 
-    let currentFilter = '5min';
+    let currentFilter = 'realtime';
     let selectedCustomDate = '';
     let rawDataStore = [];
     let envChart = null;
 
-    // ฟังก์ชันดึงเฉพาะ HH:mm:ss
-    function formatTimeOnly(str) {
-      if (!str) return "--:--:--";
-      let val = String(str).trim();
-      val = val.replace(/\s*\([^)]*\)/g, ''); // ลบวงเล็บโซนเวลาออก
-      const match = val.match(/\b([01]?\d|2[0-3]):([0-5]\d)(?::([0-5]\d))?\b/);
-      if (match) {
-        const hh = match[1].padStart(2, '0');
-        const mm = match[2].padStart(2, '0');
-        const ss = (match[3] || '00').padStart(2, '0');
-        return `${hh}:${mm}:${ss}`;
-      }
-      return val;
+    function cleanDateString(str) {
+      if (!str) return "";
+      const strVal = String(str).trim();
+      const match = strVal.match(/\d{4}-\d{2}-\d{2}/);
+      return match ? match[0] : strVal;
     }
 
-    // ฟังก์ชันดึงเฉพาะ YYYY-MM-DD แบบรองรับสตริงวันที่ทุกรูปแบบ
-    function formatDateOnly(str) {
+    function cleanTimeString(str) {
       if (!str) return "";
-      let val = String(str).trim();
-
-      // 1. ตัดข้อความวงเล็บโซนเวลาออก เช่น (เวลาอินโดจีน) หรือ (Indochina Time)
-      val = val.replace(/\s*\([^)]*\)/g, '');
-
-      // 2. ดึงรูปแบบ YYYY-MM-DD หรือ YYYY/MM/DD
-      const matchISO = val.match(/\b(\d{4})[-/](\d{1,2})[-/](\d{1,2})\b/);
-      if (matchISO) {
-        const y = matchISO[1];
-        const m = matchISO[2].padStart(2, '0');
-        const d = matchISO[3].padStart(2, '0');
-        return `${y}-${m}-${d}`;
-      }
-
-      // 3. ดึงรูปแบบ DD/MM/YYYY หรือ DD-MM-YYYY
-      const matchDMY = val.match(/\b(\d{1,2})[-/](\d{1,2})[-/](\d{4})\b/);
-      if (matchDMY) {
-        const d = matchDMY[1].padStart(2, '0');
-        const m = matchDMY[2].padStart(2, '0');
-        const y = matchDMY[3];
-        return `${y}-${m}-${d}`;
-      }
-
-      // 4. ดึงรูปแบบชื่อเดือนภาษาอังกฤษ เช่น "Wed Nov 04 2026" หรือ "04 Nov 2026"
-      const months = { jan:'01', feb:'02', mar:'03', apr:'04', may:'05', jun:'06', jul:'07', aug:'08', sep:'09', oct:'10', nov:'11', dec:'12' };
-      const matchEngMonth = val.match(/(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+(\d{1,2})\s+(\d{4})/i);
-      if (matchEngMonth) {
-        const m = months[matchEngMonth[1].toLowerCase().slice(0,3)];
-        const d = matchEngMonth[2].padStart(2, '0');
-        const y = matchEngMonth[3];
-        return `${y}-${m}-${d}`;
-      }
-      const matchEngMonth2 = val.match(/(\d{1,2})\s+(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\w*\s+(\d{4})/i);
-      if (matchEngMonth2) {
-        const d = matchEngMonth2[1].padStart(2, '0');
-        const m = months[matchEngMonth2[2].toLowerCase().slice(0,3)];
-        const y = matchEngMonth2[3];
-        return `${y}-${m}-${d}`;
-      }
-
-      // 5. ลองแปลงด้วย JS Date Object
-      const dObj = new Date(val);
-      if (!isNaN(dObj.getTime())) {
-        const y = dObj.getFullYear();
-        const m = String(dObj.getMonth() + 1).padStart(2, '0');
-        const day = String(dObj.getDate()).padStart(2, '0');
-        return `${y}-${m}-${day}`;
-      }
-
-      return val;
+      const strVal = String(str).trim();
+      const match = strVal.match(/\d{2}:\d{2}:\d{2}/);
+      return match ? match[0] : strVal;
     }
 
     function parseTimestamp(item) {
-      const d = formatDateOnly(item.date || item.Date || "");
-      const t = formatTimeOnly(item.time || item.Time || "");
+      const d = cleanDateString(item.date || item.Date || "");
+      const t = cleanTimeString(item.time || item.Time || "00:00:00");
       if (!d) return 0;
       const parsed = new Date(`${d}T${t}`);
       return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
@@ -295,7 +213,9 @@
     }
 
     function initChart() {
-      const ctx = document.getElementById('envChart').getContext('2d');
+      const canvas = document.getElementById('envChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
       envChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -354,134 +274,105 @@
       });
     }
 
-    // ฟังก์ชันกลุ่มข้อมูลคำนวณตาม Logic ใหม่และแก้ไข Bug การกรองวันที่ย้อนหลัง
+    async function fetchData() {
+      try {
+        let url = WEB_APP_URL;
+        if (selectedCustomDate) {
+          url += `?date=${selectedCustomDate}`;
+        }
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("CORS or WebApp error");
+        const json = await response.json();
+        rawDataStore = sortDataChronologically(json.data || []);
+        processAndUpdate();
+      } catch (err) {
+        console.warn("ไม่สามารถดึงข้อมูลจาก WebApp ได้", err);
+        rawDataStore = [];
+        processAndUpdate();
+      }
+    }
+
+    function groupDataByInterval(dataList, intervalMinutes) {
+      if (!dataList || dataList.length === 0) return [];
+      const groups = {};
+
+      dataList.forEach(item => {
+        const timeStr = cleanTimeString(item.time || item.Time || "00:00:00");
+        const parts = timeStr.split(':');
+        const h = parseInt(parts[0], 10) || 0;
+        const m = parseInt(parts[1], 10) || 0;
+
+        const bucketMin = Math.floor(m / intervalMinutes) * intervalMinutes;
+        const bucketKey = `${String(h).padStart(2, '0')}:${String(bucketMin).padStart(2, '0')}:00`;
+
+        if (!groups[bucketKey]) {
+          groups[bucketKey] = { tempSum: 0, humSum: 0, count: 0, date: item.date };
+        }
+        groups[bucketKey].tempSum += parseFloat(item.temp || 0);
+        groups[bucketKey].humSum += parseFloat(item.hum || 0);
+        groups[bucketKey].count += 1;
+      });
+
+      return Object.keys(groups).sort().map(key => ({
+        date: groups[key].date,
+        time: key,
+        temp: (groups[key].tempSum / groups[key].count).toFixed(1),
+        hum: (groups[key].humSum / groups[key].count).toFixed(1)
+      }));
+    }
+
+    function groupDataByDay(dataList) {
+      if (!dataList || dataList.length === 0) return [];
+      const groups = {};
+
+      dataList.forEach(item => {
+        const d = cleanDateString(item.date || item.Date || "");
+        if (!d) return;
+        if (!groups[d]) {
+          groups[d] = { tempSum: 0, humSum: 0, count: 0 };
+        }
+        groups[d].tempSum += parseFloat(item.temp || 0);
+        groups[d].humSum += parseFloat(item.hum || 0);
+        groups[d].count += 1;
+      });
+
+      return Object.keys(groups).sort().map(key => ({
+        date: key,
+        time: key,
+        temp: (groups[key].tempSum / groups[key].count).toFixed(1),
+        hum: (groups[key].humSum / groups[key].count).toFixed(1)
+      }));
+    }
+
     function filterDataByRange(dataList) {
       if (!dataList || dataList.length === 0) return [];
       
       let sorted = sortDataChronologically(dataList);
 
-      // กรองตามวันที่ที่เลือกถ้ามีการระบุ
+      // กรองตามวันที่เลือกในปฏิทิน
       if (selectedCustomDate) {
-        sorted = sorted.filter(item => {
-          const d = formatDateOnly(item.date || item.Date || "");
-          return d === selectedCustomDate;
-        });
-      } else if (currentFilter !== '24hour') {
-        // หากไม่ได้ระบุวันที่เลือกย้อนหลัง ให้ใช้วันล่าสุดที่มีในข้อมูล
-        const latestDateStr = formatDateOnly(sorted[sorted.length - 1]?.date || sorted[sorted.length - 1]?.Date || "");
-        if (latestDateStr) {
-          sorted = sorted.filter(item => formatDateOnly(item.date || item.Date || "") === latestDateStr);
+        sorted = sorted.filter(item => cleanDateString(item.date || item.Date || "") === selectedCustomDate);
+      } else {
+        // หากไม่ได้เลือกวันย้อนหลัง ให้แสดงข้อมูลของวันล่าสุดที่มีในชีต
+        if (currentFilter !== '24hour' && sorted.length > 0) {
+          const latestDate = cleanDateString(sorted[sorted.length - 1].date);
+          sorted = sorted.filter(item => cleanDateString(item.date) === latestDate);
         }
       }
 
       if (sorted.length === 0) return [];
 
-      // 1. 24 ชั่วโมง: ภาพรวมรายวันในเดือนนั้นๆ
-      if (currentFilter === '24hour') {
-        const dayGroups = {};
-        sorted.forEach(item => {
-          const dayKey = formatDateOnly(item.date || item.Date || "");
-          if (!dayKey) return;
-          if (!dayGroups[dayKey]) dayGroups[dayKey] = { temps: [], hums: [], date: dayKey };
-          dayGroups[dayKey].temps.push(parseFloat(item.temp || item["Temp (C)"] || 0));
-          dayGroups[dayKey].hums.push(parseFloat(item.hum || item["Humidity (%)"] || 0));
-        });
-
-        return Object.keys(dayGroups).sort().map(dayKey => {
-          const group = dayGroups[dayKey];
-          const avgT = group.temps.reduce((a, b) => a + b, 0) / group.temps.length;
-          const avgH = group.hums.reduce((a, b) => a + b, 0) / group.hums.length;
-          return {
-            date: dayKey,
-            time: "เฉลี่ยทั้งวัน",
-            temp: parseFloat(avgT.toFixed(1)),
-            hum: parseFloat(avgH.toFixed(1))
-          };
-        });
+      if (currentFilter === 'realtime') {
+        return sorted;
+      } else if (currentFilter === '30min') {
+        return groupDataByInterval(sorted, 30);
+      } else if (currentFilter === '1hour') {
+        return groupDataByInterval(sorted, 60);
+      } else if (currentFilter === '24hour') {
+        return groupDataByDay(rawDataStore);
       }
 
-      // 2. เรียลไทม์ (5 นาที), 30 นาที, 1 ชั่วโมง: รวมกลุ่มภายในวันนั้นและหาค่าเฉลี่ยตามช่วงเวลา
-      const minuteIntervals = {
-        '5min': 5,
-        '30min': 30,
-        '1hour': 60
-      };
-
-      const interval = minuteIntervals[currentFilter];
-      if (!interval) return sorted;
-
-      const timeGroups = {};
-      sorted.forEach(item => {
-        const timeStr = formatTimeOnly(item.time || item.Time || "");
-        const parts = timeStr.split(':');
-        if (parts.length < 2) return;
-
-        const hour = parseInt(parts[0], 10);
-        const minute = parseInt(parts[1], 10);
-        
-        // คำนวณช่วงเวลาเริ่ม (Block Start)
-        const blockMinute = Math.floor(minute / interval) * interval;
-        const blockKey = `${String(hour).padStart(2, '0')}:${String(blockMinute).padStart(2, '0')}`;
-
-        if (!timeGroups[blockKey]) {
-          timeGroups[blockKey] = {
-            temps: [],
-            hums: [],
-            timeLabel: blockKey,
-            date: formatDateOnly(item.date || item.Date || "")
-          };
-        }
-
-        timeGroups[blockKey].temps.push(parseFloat(item.temp || item["Temp (C)"] || 0));
-        timeGroups[blockKey].hums.push(parseFloat(item.hum || item["Humidity (%)"] || 0));
-      });
-
-      return Object.keys(timeGroups).sort().map(key => {
-        const group = timeGroups[key];
-        const avgT = group.temps.reduce((a, b) => a + b, 0) / group.temps.length;
-        const avgH = group.hums.reduce((a, b) => a + b, 0) / group.hums.length;
-        return {
-          date: group.date,
-          time: group.timeLabel,
-          temp: parseFloat(avgT.toFixed(1)),
-          hum: parseFloat(avgH.toFixed(1))
-        };
-      });
-    }
-
-    async function fetchData() {
-      try {
-        let url = `${WEB_APP_URL}?range=${currentFilter}`;
-        if (selectedCustomDate) {
-          url += `&date=${selectedCustomDate}`;
-        }
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("CORS or WebApp error");
-        const json = await response.json();
-        let list = json.data || (Array.isArray(json) ? json : []);
-
-        // Fallback: หากเซิร์ฟเวอร์ส่งคืนข้อมูลว่างเนื่องจากรูปแบบการค้นหาวันที่ไม่ตรงกัน ให้ดึงข้อมูลทั้งหมดมา กรองฝั่ง Client
-        if ((!list || list.length === 0) && selectedCustomDate) {
-          const fallbackResp = await fetch(`${WEB_APP_URL}?range=all`);
-          if (fallbackResp.ok) {
-            const fallbackJson = await fallbackResp.ok ? await fallbackResp.json() : null;
-            if (fallbackJson) {
-              list = fallbackJson.data || (Array.isArray(fallbackJson) ? fallbackJson : []);
-            }
-          }
-        }
-
-        if (!list || list.length === 0) {
-          list = mockData;
-        }
-
-        rawDataStore = sortDataChronologically(list);
-        processAndUpdate();
-      } catch (err) {
-        console.warn("ไม่สามารถดึงข้อมูลจาก WebApp ได้ ระบบกำลังใช้ข้อมูลจำลอง", err);
-        rawDataStore = sortDataChronologically(mockData);
-        processAndUpdate();
-      }
+      return sorted;
     }
 
     function processAndUpdate() {
@@ -495,7 +386,7 @@
         document.getElementById('currHum').innerText = "--";
         document.getElementById('recordCount').innerText = "0";
         document.getElementById('comfortStatus').innerText = "ไม่พบข้อมูลในช่วงที่เลือก";
-        document.getElementById('comfortStatus').className = "text-lg font-bold text-rose-500";
+        document.getElementById('comfortStatus').className = "text-xl font-bold text-rose-500";
         document.getElementById('trendAnalyticsBadge').innerHTML = "ไม่มีข้อมูลตามเงื่อนไขการกรอง";
         if (envChart) {
           envChart.data.labels = [];
@@ -507,12 +398,9 @@
         return;
       }
 
-      const labels = dataList.map(item => {
-        if (currentFilter === '24hour') return formatDateOnly(item.date);
-        return formatTimeOnly(item.time);
-      });
-      const temps = dataList.map(item => parseFloat(item.temp || item["Temp (C)"] || 0));
-      const hums = dataList.map(item => parseFloat(item.hum || item["Humidity (%)"] || 0));
+      const labels = dataList.map(item => currentFilter === '24hour' ? cleanDateString(item.date) : cleanTimeString(item.time));
+      const temps = dataList.map(item => parseFloat(item.temp || 0));
+      const hums = dataList.map(item => parseFloat(item.hum || 0));
 
       const latestTemp = temps[temps.length - 1];
       const latestHum = hums[hums.length - 1];
@@ -562,15 +450,15 @@
       if (latestTemp >= 22 && latestTemp <= 26 && latestHum >= 50 && latestHum <= 65) {
         statusEl.innerText = "เย็นสบายพอดี";
         statusEl.className = "text-xl font-bold text-emerald-600";
-        descEl.innerText = `อุณหภูมิและความชื้นอยู่ในเกณฑ์สบายตัว (เปลี่ยนแปลง ${tempDelta}°C ในช่วงเวลานี้)`;
+        descEl.innerText = `อุณหภูมิและความชื้นอยู่ในเกณฑ์สบายตัว`;
       } else if (latestTemp > 26) {
         statusEl.innerText = "อากาศค่อนข้างร้อน";
         statusEl.className = "text-xl font-bold text-amber-600";
-        descEl.innerText = `ข้อแนะนำ: เปิดพัดลมหรือแอร์ (อุณหภูมิมีแนวโน้ม ${tempDelta > 0 ? 'สูงขึ้น' : 'ทรงตัว'})`;
+        descEl.innerText = `ข้อแนะนำ: เปิดพัดลมหรือแอร์`;
       } else {
         statusEl.innerText = "ปกติ";
         statusEl.className = "text-xl font-bold text-sky-600";
-        descEl.innerText = `สภาพอากาศในห้องปกติ (อัตราเปลี่ยน: ${tempDelta}°C)`;
+        descEl.innerText = `สภาพอากาศในห้องปกติ`;
       }
 
       envChart.data.labels = labels;
@@ -597,10 +485,10 @@
 
       tbody.innerHTML = '';
       sortedNewestFirst.forEach((item, index) => {
-        const dateStr = formatDateOnly(item.date || item.Date || "-");
-        const timeStr = formatTimeOnly(item.time || item.Time || "-");
-        const tempVal = parseFloat(item.temp || item["Temp (C)"] || 0).toFixed(1);
-        const humVal = parseFloat(item.hum || item["Humidity (%)"] || 0).toFixed(1);
+        const dateStr = cleanDateString(item.date || item.Date || "-");
+        const timeStr = cleanTimeString(item.time || item.Time || "-");
+        const tempVal = parseFloat(item.temp || 0).toFixed(1);
+        const humVal = parseFloat(item.hum || 0).toFixed(1);
 
         const tr = document.createElement('tr');
         tr.className = index % 2 === 0 ? "bg-white hover:bg-sky-50/50 transition-colors" : "bg-slate-50/50 hover:bg-sky-50/50 transition-colors";
@@ -623,7 +511,7 @@
 
     function setFilter(filterType) {
       currentFilter = filterType;
-      const allFilters = ['5min', '30min', '1hour', '24hour'];
+      const allFilters = ['realtime', '30min', '1hour', '24hour'];
       
       allFilters.forEach(f => {
         const btn = document.getElementById(`btn-${f}`);
@@ -635,7 +523,7 @@
         }
       });
 
-      fetchData();
+      processAndUpdate();
     }
 
     function onDateChange(dateValue) {
@@ -657,42 +545,38 @@
       fetchData();
     }
 
-    // ฟังก์ชันดาวน์โหลดรูปกราฟ PNG
-    function exportChartImage() {
-      if (!envChart) return;
-      const imageURI = envChart.toBase64Image();
-      const link = document.createElement('a');
-      link.download = `DHT11_Chart_${currentFilter}_${new Date().toISOString().split('T')[0]}.png`;
-      link.href = imageURI;
+    function exportToCSV() {
+      const filteredList = filterDataByRange(rawDataStore);
+      if (!filteredList || filteredList.length === 0) {
+        alert("ไม่มีข้อมูลสำหรับส่งออก CSV");
+        return;
+      }
+      let csvContent = "\uFEFFลำดับ,วันที่,เวลา,อุณหภูมิ (C),ความชื้น (%)\n";
+      const sorted = sortDataChronologically(filteredList).reverse();
+
+      sorted.forEach((item, index) => {
+        const dateStr = cleanDateString(item.date || "-");
+        const timeStr = cleanTimeString(item.time || "-");
+        csvContent += `${sorted.length - index},${dateStr},${timeStr},${item.temp},${item.hum}\n`;
+      });
+
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", `DHT11_Environment_Log_${selectedCustomDate || 'Data'}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
 
-    // ฟังก์ชันดาวน์โหลดข้อมูลดิบเป็น CSV
-    function exportToCSV() {
-      const filteredList = filterDataByRange(rawDataStore);
-      if (!filteredList || filteredList.length === 0) {
-        alert("ไม่มีข้อมูลสำหรับดาวน์โหลด");
-        return;
-      }
-
-      let csvContent = "\uFEFFลำดับ,วันที่,เวลา,อุณหภูมิ (C),ความชื้น (%)\n";
-      const sorted = sortDataChronologically(filteredList).reverse();
-      
-      sorted.forEach((item, index) => {
-        const dateStr = formatDateOnly(item.date || item.Date || "");
-        const timeStr = formatTimeOnly(item.time || item.Time || "");
-        const tempVal = parseFloat(item.temp || item["Temp (C)"] || 0).toFixed(1);
-        const humVal = parseFloat(item.hum || item["Humidity (%)"] || 0).toFixed(1);
-        csvContent += `${sorted.length - index},${dateStr},${timeStr},${tempVal},${humVal}\n`;
-      });
-
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.setAttribute('href', url);
-      link.setAttribute('download', `DHT11_Data_Export_${new Date().toISOString().split('T')[0]}.csv`);
+    function exportChartImage() {
+      const canvas = document.getElementById('envChart');
+      if (!canvas) return;
+      const imageURI = canvas.toDataURL("image/png");
+      const link = document.createElement("a");
+      link.href = imageURI;
+      link.download = `DHT11_Trend_Chart_${selectedCustomDate || 'Current'}.png`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
