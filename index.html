@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน602/262</title>
+  <title>ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน 602262</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Chart.js CDN -->
@@ -19,7 +19,7 @@
     <!-- Header -->
     <header class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-sky-100 shadow-sm">
       <div>
-        <h1 class="text-2xl md:text-3xl font-bold text-sky-700">ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน602/262</h1>
+        <h1 class="text-2xl md:text-3xl font-bold text-sky-700">ระบบตรวจติดตามอุณหภูมิและความชื้นในบ้าน 602262</h1>
         <p class="text-slate-500 text-sm mt-1">Home Temperature & Humidity Monitoring Dashboard (DHT11)</p>
       </div>
       <div class="flex items-center gap-3">
@@ -38,51 +38,59 @@
       <div class="bg-white border border-emerald-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
           <span class="text-sm font-medium">อุณหภูมิปัจจุบัน</span>
-          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+          </svg>
         </div>
         <div class="my-3">
           <span id="currTemp" class="text-4xl font-extrabold text-emerald-600">--</span>
           <span class="text-lg text-slate-400 ml-1">°C</span>
         </div>
         <div class="text-xs text-slate-500 flex justify-between">
-          <span>เฉลี่ย: <strong id="avgTemp" class="text-slate-700">-- °C</strong></span>
-          <span>มิน-แม็กซ์: <strong id="minMaxTemp" class="text-slate-700">-- / --</strong></span>
+          <span>เฉลี่ย <strong id="avgTemp" class="text-slate-700">-- °C</strong></span>
+          <span>มิน-แม็กซ์ <strong id="minMaxTemp" class="text-slate-700">-- – --</strong></span>
         </div>
       </div>
 
       <div class="bg-white border border-sky-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
           <span class="text-sm font-medium">ความชื้นปัจจุบัน</span>
-          <svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"></path></svg>
+          <svg class="w-5 h-5 text-sky-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707"></path>
+          </svg>
         </div>
         <div class="my-3">
           <span id="currHum" class="text-4xl font-extrabold text-sky-600">--</span>
           <span class="text-lg text-slate-400 ml-1">%</span>
         </div>
         <div class="text-xs text-slate-500 flex justify-between">
-          <span>เฉลี่ย: <strong id="avgHum" class="text-slate-700">-- %</strong></span>
-          <span>มิน-แม็กซ์: <strong id="minMaxHum" class="text-slate-700">-- / --</strong></span>
+          <span>เฉลี่ย <strong id="avgHum" class="text-slate-700">-- %</strong></span>
+          <span>มิน-แม็กซ์ <strong id="minMaxHum" class="text-slate-700">-- – --</strong></span>
         </div>
       </div>
 
       <div class="bg-white border border-sky-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
           <span class="text-sm font-medium">จำนวนจุดบันทึก (ช่วงที่เลือก)</span>
-          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path></svg>
+          <svg class="w-5 h-5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"></path>
+          </svg>
         </div>
         <div class="my-3">
           <span id="recordCount" class="text-4xl font-extrabold text-sky-700">--</span>
           <span class="text-lg text-slate-400 ml-1">รายการ</span>
         </div>
         <div class="text-xs text-slate-500">
-          อัปเดตล่าสุด: <span id="lastUpdated" class="text-slate-700">--:--:--</span>
+          อัปเดตล่าสุด <span id="lastUpdated" class="text-slate-700">--</span>
         </div>
       </div>
 
       <div class="bg-white border border-emerald-100 rounded-2xl p-5 shadow-sm flex flex-col justify-between">
         <div class="flex items-center justify-between text-slate-500">
           <span class="text-sm font-medium">วิเคราะห์แนวโน้ม & สภาวะห้อง</span>
-          <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
         </div>
         <div class="my-2">
           <div id="comfortStatus" class="text-xl font-bold text-emerald-600">กำลังประมวลผล...</div>
@@ -99,7 +107,9 @@
       <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
           <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-            <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+            <svg class="w-5 h-5 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path>
+            </svg>
             กราฟวิเคราะห์แนวโน้ม (Trend Analytics)
           </h2>
           <p class="text-xs text-slate-500 mt-0.5">เปรียบเทียบค่าอุณหภูมิ (°C) และความชื้น (%) ตามช่วงเวลาที่ต้องการ</p>
@@ -112,7 +122,7 @@
             </button>
             <button onclick="setFilter('30min')" id="btn-30min" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">เฉลี่ย 30 นาที</button>
             <button onclick="setFilter('1hour')" id="btn-1hour" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">เฉลี่ย 1 ชั่วโมง</button>
-            <button onclick="setFilter('24hour')" id="btn-24hour" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">ภาพรวมรายวัน (เดือนนี้)</button>
+            <button onclick="setFilter('24hour')" id="btn-24hour" class="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap">เฉลี่ยรายวัน</button>
           </div>
 
           <div class="flex items-center gap-1.5 bg-slate-50 p-1 rounded-xl border border-sky-100">
@@ -123,7 +133,9 @@
           </div>
 
           <button onclick="exportChartImage()" class="px-3 py-1.5 text-xs font-medium rounded-xl text-sky-700 bg-sky-50 hover:bg-sky-100 border border-sky-200 flex items-center gap-1.5 transition-all">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
             ส่งออกรูปกราฟ PNG
           </button>
         </div>
@@ -139,7 +151,9 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
         <div>
           <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
-            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+            <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+            </svg>
             ตารางข้อมูลดิบ (Raw Data Log)
           </h2>
           <p class="text-xs text-slate-500 mt-0.5">เรียงลำดับรายการที่ถูกบันทึกล่าสุดไว้ด้านบนสุด (Descending Order)</p>
@@ -149,7 +163,9 @@
             แสดงทั้งหมด <span id="rawTableCount" class="text-emerald-600 font-bold">0</span> รายการ
           </span>
           <button onclick="exportToCSV()" class="px-3 py-1.5 text-xs font-medium rounded-xl text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 flex items-center gap-1.5 transition-all">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
             ดาวน์โหลด CSV
           </button>
         </div>
@@ -179,37 +195,72 @@
   </div>
 
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbweM8lM-we9g1ahbpvUyPwEoXTPgEni_k2uX_8gYm1oVro6aUUO5LrK6lp7m3oL-25ioA/exec";
+    const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbweM8lM-we9g1ahbpvUyPwEoXTPgEni_k2uX_8gYm1oVro6aUUO5LrK6lp7m3oL-25ioA/exec';
 
     let currentFilter = 'realtime';
     let selectedCustomDate = '';
     let rawDataStore = [];
     let envChart = null;
 
-    function cleanDateString(str) {
-      if (!str) return "";
-      const strVal = String(str).trim();
-      const match = strVal.match(/\d{4}-\d{2}-\d{2}/);
-      return match ? match[0] : strVal;
+    let homeRequestVersion = 0;
+    let homeAbortController = null;
+
+    function cleanDateString(value) {
+      const text = String(value ?? "").trim();
+      return /^\d{4}-\d{2}-\d{2}$/.test(text) ? text : "";
     }
 
-    function cleanTimeString(str) {
-      if (!str) return "";
-      const strVal = String(str).trim();
-      const match = strVal.match(/\d{2}:\d{2}:\d{2}/);
-      return match ? match[0] : strVal;
+    function cleanTimeString(value) {
+      const text = String(value ?? "").trim();
+      const match = text.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?$/);
+
+      if (!match) return "";
+
+      const h = Number(match[1]);
+      const m = Number(match[2]);
+      const s = Number(match[3] || 0);
+
+      if (h > 23 || m > 59 || s > 59) return "";
+
+      return [h, m, s]
+        .map(n => String(n).padStart(2, "0"))
+        .join(":");
     }
 
     function parseTimestamp(item) {
-      const d = cleanDateString(item.date || item.Date || "");
-      const t = cleanTimeString(item.time || item.Time || "00:00:00");
-      if (!d) return 0;
-      const parsed = new Date(`${d}T${t}`);
-      return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
+      const date = cleanDateString(item.date ?? item.Date);
+      const time = cleanTimeString(item.time ?? item.Time);
+
+      if (!date || !time) return NaN;
+
+      return Date.parse(`${date}T${time}+07:00`);
     }
 
-    function sortDataChronologically(dataList) {
-      return [...dataList].sort((a, b) => parseTimestamp(a) - parseTimestamp(b));
+    function sortDataChronologically(list) {
+      return [...list].sort(
+        (a, b) => parseTimestamp(a) - parseTimestamp(b)
+      );
+    }
+
+    function homeSetText(id, value) {
+      const element = document.getElementById(id);
+      if (element) element.textContent = value;
+    }
+
+    function homeShowFetchError(message) {
+      let element = document.getElementById("homeFetchError");
+
+      if (!element) {
+        element = document.createElement("div");
+        element.id = "homeFetchError";
+        element.setAttribute("role", "status");
+        element.className = "p-3 mx-4 mt-4 text-xs rounded-xl bg-amber-50 text-amber-700 border border-amber-200";
+
+        document.body.prepend(element);
+      }
+
+      element.textContent = message;
+      element.hidden = !message;
     }
 
     function initChart() {
@@ -229,7 +280,9 @@
               borderWidth: 2,
               tension: 0.3,
               fill: true,
-              yAxisID: 'yTemp'
+              yAxisID: 'yTemp',
+              pointRadius: 0,
+              pointHoverRadius: 3
             },
             {
               label: 'ความชื้น (%)',
@@ -239,11 +292,14 @@
               borderWidth: 2,
               tension: 0.3,
               fill: true,
-              yAxisID: 'yHum'
+              yAxisID: 'yHum',
+              pointRadius: 0,
+              pointHoverRadius: 3
             }
           ]
         },
         options: {
+          animation: false,
           responsive: true,
           maintainAspectRatio: false,
           interaction: { mode: 'index', intersect: false },
@@ -275,238 +331,398 @@
     }
 
     async function fetchData() {
+      const version = ++homeRequestVersion;
+      const requestedDate = selectedCustomDate;
+
+      if (homeAbortController) homeAbortController.abort();
+
+      const controller = new AbortController();
+      homeAbortController = controller;
+
+      const timeout = setTimeout(() => controller.abort(), 25000);
+
       try {
-        let url = WEB_APP_URL;
-        if (selectedCustomDate) {
-          url += `?date=${selectedCustomDate}`;
+        const url = new URL(WEB_APP_URL);
+
+        if (requestedDate) {
+          url.searchParams.set("date", requestedDate);
         }
-        const response = await fetch(url);
-        if (!response.ok) throw new Error("CORS or WebApp error");
+
+        const response = await fetch(url.toString(), {
+          signal: controller.signal,
+          cache: "no-store"
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
         const json = await response.json();
-        rawDataStore = sortDataChronologically(json.data || []);
+
+        if (json.status !== "success" || !Array.isArray(json.data)) {
+          throw new Error(json.message || "รูปแบบข้อมูลไม่ถูกต้อง");
+        }
+
+        const normalized = [];
+
+        for (const item of json.data) {
+          const date = cleanDateString(item.date);
+          const time = cleanTimeString(item.time);
+
+          if (item.temp === null || item.hum === null ||
+              String(item.temp ?? "").trim() === "" ||
+              String(item.hum ?? "").trim() === "") {
+            continue;
+          }
+
+          const temp = Number(item.temp);
+          const hum = Number(item.hum);
+          const timestamp = parseTimestamp({ date, time });
+
+          if (!Number.isFinite(temp) || !Number.isFinite(hum) ||
+              !Number.isFinite(timestamp) || hum < 0 || hum > 100) {
+            continue;
+          }
+
+          normalized.push({ date, time, temp, hum, timestamp });
+        }
+
+        if (version !== homeRequestVersion) return;
+
+        normalized.sort((a, b) => a.timestamp - b.timestamp);
+        rawDataStore = normalized;
+
+        homeShowFetchError(
+          json.invalidCount
+            ? `ข้ามข้อมูลผิดรูปแบบ ${json.invalidCount} แถว`
+            : ""
+        );
+
         processAndUpdate();
-      } catch (err) {
-        console.warn("ไม่สามารถดึงข้อมูลจาก WebApp ได้", err);
-        rawDataStore = [];
-        processAndUpdate();
+
+      } catch (error) {
+        if (version !== homeRequestVersion) return;
+
+        console.warn("Dashboard fetch failed", error);
+
+        homeShowFetchError(
+          "อัปเดตไม่สำเร็จ ข้อมูลบนหน้าจอยังเป็นข้อมูลที่โหลดก่อนหน้า และอาจไม่ตรงกับวันที่ที่เพิ่งเลือก"
+        );
+
+      } finally {
+        clearTimeout(timeout);
+
+        if (version === homeRequestVersion) {
+          homeAbortController = null;
+        }
       }
     }
 
-    function groupDataByInterval(dataList, intervalMinutes) {
-      if (!dataList || dataList.length === 0) return [];
-      const groups = {};
+    function getSelectedRawData() {
+      if (!rawDataStore.length) return [];
 
-      dataList.forEach(item => {
-        const timeStr = cleanTimeString(item.time || item.Time || "00:00:00");
-        const parts = timeStr.split(':');
-        const h = parseInt(parts[0], 10) || 0;
-        const m = parseInt(parts[1], 10) || 0;
-
-        const bucketMin = Math.floor(m / intervalMinutes) * intervalMinutes;
-        const bucketKey = `${String(h).padStart(2, '0')}:${String(bucketMin).padStart(2, '0')}:00`;
-
-        if (!groups[bucketKey]) {
-          groups[bucketKey] = { tempSum: 0, humSum: 0, count: 0, date: item.date };
-        }
-        groups[bucketKey].tempSum += parseFloat(item.temp || 0);
-        groups[bucketKey].humSum += parseFloat(item.hum || 0);
-        groups[bucketKey].count += 1;
-      });
-
-      return Object.keys(groups).sort().map(key => ({
-        date: groups[key].date,
-        time: key,
-        temp: (groups[key].tempSum / groups[key].count).toFixed(1),
-        hum: (groups[key].humSum / groups[key].count).toFixed(1)
-      }));
-    }
-
-    function groupDataByDay(dataList) {
-      if (!dataList || dataList.length === 0) return [];
-      const groups = {};
-
-      dataList.forEach(item => {
-        const d = cleanDateString(item.date || item.Date || "");
-        if (!d) return;
-        if (!groups[d]) {
-          groups[d] = { tempSum: 0, humSum: 0, count: 0 };
-        }
-        groups[d].tempSum += parseFloat(item.temp || 0);
-        groups[d].humSum += parseFloat(item.hum || 0);
-        groups[d].count += 1;
-      });
-
-      return Object.keys(groups).sort().map(key => ({
-        date: key,
-        time: key,
-        temp: (groups[key].tempSum / groups[key].count).toFixed(1),
-        hum: (groups[key].humSum / groups[key].count).toFixed(1)
-      }));
-    }
-
-    function filterDataByRange(dataList) {
-      if (!dataList || dataList.length === 0) return [];
-      
-      let sorted = sortDataChronologically(dataList);
-
-      // กรองตามวันที่เลือกในปฏิทิน
       if (selectedCustomDate) {
-        sorted = sorted.filter(item => cleanDateString(item.date || item.Date || "") === selectedCustomDate);
-      } else {
-        // หากไม่ได้เลือกวันย้อนหลัง ให้แสดงข้อมูลของวันล่าสุดที่มีในชีต
-        if (currentFilter !== '24hour' && sorted.length > 0) {
-          const latestDate = cleanDateString(sorted[sorted.length - 1].date);
-          sorted = sorted.filter(item => cleanDateString(item.date) === latestDate);
+        return rawDataStore.filter(
+          item => item.date === selectedCustomDate
+        );
+      }
+
+      if (currentFilter === "24hour") {
+        return rawDataStore;
+      }
+
+      const latestDate = rawDataStore[rawDataStore.length - 1].date;
+
+      return rawDataStore.filter(item => item.date === latestDate);
+    }
+
+    function homeBangkokParts(timestamp) {
+      const iso = new Date(timestamp + 7 * 60 * 60 * 1000)
+        .toISOString();
+
+      return {
+        date: iso.slice(0, 10),
+        time: iso.slice(11, 19)
+      };
+    }
+
+    function groupDataByInterval(list, minutes) {
+      const intervalMs = minutes * 60 * 1000;
+      const offsetMs = 7 * 60 * 60 * 1000;
+      const groups = new Map();
+
+      for (const item of list) {
+        const key =
+          Math.floor((item.timestamp + offsetMs) / intervalMs) *
+          intervalMs - offsetMs;
+
+        let group = groups.get(key);
+
+        if (!group) {
+          group = { temp: 0, hum: 0, count: 0 };
+          groups.set(key, group);
         }
+
+        group.temp += item.temp;
+        group.hum += item.hum;
+        group.count++;
       }
 
-      if (sorted.length === 0) return [];
+      return [...groups.entries()]
+        .sort((a, b) => a[0] - b[0])
+        .map(([timestamp, group]) => ({
+          ...homeBangkokParts(timestamp),
+          timestamp,
+          temp: group.temp / group.count,
+          hum: group.hum / group.count,
+          count: group.count
+        }));
+    }
 
-      if (currentFilter === 'realtime') {
-        return sorted;
-      } else if (currentFilter === '30min') {
-        return groupDataByInterval(sorted, 30);
-      } else if (currentFilter === '1hour') {
-        return groupDataByInterval(sorted, 60);
-      } else if (currentFilter === '24hour') {
-        return groupDataByDay(rawDataStore);
+    function groupDataByDay(list) {
+      const groups = new Map();
+
+      for (const item of list) {
+        let group = groups.get(item.date);
+
+        if (!group) {
+          group = { temp: 0, hum: 0, count: 0 };
+          groups.set(item.date, group);
+        }
+
+        group.temp += item.temp;
+        group.hum += item.hum;
+        group.count++;
       }
 
-      return sorted;
+      return [...groups.entries()]
+        .sort((a, b) => a[0].localeCompare(b[0]))
+        .map(([date, group]) => ({
+          date,
+          time: "00:00:00",
+          timestamp: Date.parse(`${date}T00:00:00+07:00`),
+          temp: group.temp / group.count,
+          hum: group.hum / group.count,
+          count: group.count
+        }));
+    }
+
+    function filterDataByRange(list) {
+      if (currentFilter === "30min") {
+        return groupDataByInterval(list, 30);
+      }
+
+      if (currentFilter === "1hour") {
+        return groupDataByInterval(list, 60);
+      }
+
+      if (currentFilter === "24hour") {
+        return groupDataByDay(list);
+      }
+
+      return list;
     }
 
     function processAndUpdate() {
-      const filteredList = filterDataByRange(rawDataStore);
-      updateDashboard(filteredList);
+      const raw = getSelectedRawData();
+      const chartData = filterDataByRange(raw);
+
+      updateDashboard(chartData, raw);
     }
 
-    function updateDashboard(dataList) {
-      if (!dataList || dataList.length === 0) {
-        document.getElementById('currTemp').innerText = "--";
-        document.getElementById('currHum').innerText = "--";
-        document.getElementById('recordCount').innerText = "0";
-        document.getElementById('comfortStatus').innerText = "ไม่พบข้อมูลในช่วงที่เลือก";
-        document.getElementById('comfortStatus').className = "text-xl font-bold text-rose-500";
-        document.getElementById('trendAnalyticsBadge').innerHTML = "ไม่มีข้อมูลตามเงื่อนไขการกรอง";
+    function homeStats(list, key) {
+      let sum = 0;
+      let min = Infinity;
+      let max = -Infinity;
+
+      for (const item of list) {
+        const value = item[key];
+        sum += value;
+        if (value < min) min = value;
+        if (value > max) max = value;
+      }
+
+      return { avg: sum / list.length, min, max };
+    }
+
+    function homeChartSample(list, maxPoints = 1200) {
+      if (list.length <= maxPoints) return list;
+
+      const sampled = [];
+
+      for (let i = 0; i < maxPoints; i++) {
+        const index = Math.round(
+          i * (list.length - 1) / (maxPoints - 1)
+        );
+
+        sampled.push(list[index]);
+      }
+
+      return sampled;
+    }
+
+    function updateDashboard(chartData, rawData) {
+      const raw = rawData ?? getSelectedRawData();
+
+      if (!raw.length) {
+        homeSetText("currTemp", "--");
+        homeSetText("currHum", "--");
+        homeSetText("avgTemp", "--");
+        homeSetText("avgHum", "--");
+        homeSetText("minMaxTemp", "--");
+        homeSetText("minMaxHum", "--");
+        homeSetText("recordCount", "0");
+        homeSetText("lastUpdated", "--");
+        homeSetText("comfortStatus", "ไม่พบข้อมูลในช่วงที่เลือก");
+        homeSetText("comfortDesc", "");
+        homeSetText("trendAnalyticsBadge", "ไม่มีข้อมูล");
+
         if (envChart) {
           envChart.data.labels = [];
-          envChart.data.datasets[0].data = [];
-          envChart.data.datasets[1].data = [];
-          envChart.update();
+          envChart.data.datasets.forEach(dataset => {
+            dataset.data = [];
+          });
+          envChart.update("none");
         }
+
         renderRawDataTable([]);
         return;
       }
 
-      const labels = dataList.map(item => currentFilter === '24hour' ? cleanDateString(item.date) : cleanTimeString(item.time));
-      const temps = dataList.map(item => parseFloat(item.temp || 0));
-      const hums = dataList.map(item => parseFloat(item.hum || 0));
+      const latest = raw[raw.length - 1];
+      const first = raw[0];
+      const tempStats = homeStats(raw, "temp");
+      const humStats = homeStats(raw, "hum");
 
-      const latestTemp = temps[temps.length - 1];
-      const latestHum = hums[hums.length - 1];
+      homeSetText("currTemp", latest.temp.toFixed(1));
+      homeSetText("currHum", latest.hum.toFixed(1));
 
-      const avgTemp = (temps.reduce((a, b) => a + b, 0) / temps.length).toFixed(1);
-      const minTemp = Math.min(...temps).toFixed(1);
-      const maxTemp = Math.max(...temps).toFixed(1);
+      homeSetText("avgTemp", `${tempStats.avg.toFixed(1)} °C`);
+      homeSetText("avgHum", `${humStats.avg.toFixed(1)} %`);
 
-      const avgHum = (hums.reduce((a, b) => a + b, 0) / hums.length).toFixed(1);
-      const minHum = Math.min(...hums).toFixed(1);
-      const maxHum = Math.max(...hums).toFixed(1);
+      homeSetText(
+        "minMaxTemp",
+        `${tempStats.min.toFixed(1)} – ${tempStats.max.toFixed(1)}`
+      );
 
-      document.getElementById('currTemp').innerText = latestTemp.toFixed(1);
-      document.getElementById('avgTemp').innerText = `${avgTemp} °C`;
-      document.getElementById('minMaxTemp').innerText = `${minTemp} / ${maxTemp}`;
+      homeSetText(
+        "minMaxHum",
+        `${humStats.min.toFixed(1)} – ${humStats.max.toFixed(1)}`
+      );
 
-      document.getElementById('currHum').innerText = latestHum.toFixed(1);
-      document.getElementById('avgHum').innerText = `${avgHum} %`;
-      document.getElementById('minMaxHum').innerText = `${minHum} / ${maxHum}`;
+      homeSetText("recordCount", raw.length);
+      homeSetText(
+        "lastUpdated",
+        `${latest.date} ${latest.time} (เวลาไทย)`
+      );
 
-      document.getElementById('recordCount').innerText = dataList.length;
-      document.getElementById('lastUpdated').innerText = labels[labels.length - 1] || new Date().toLocaleTimeString();
+      const tempDelta = latest.temp - first.temp;
+      const humDelta = latest.hum - first.hum;
+      const signed = value =>
+        `${value > 0 ? "+" : ""}${value.toFixed(1)}`;
 
-      const firstTemp = temps[0];
-      const tempDelta = (latestTemp - firstTemp).toFixed(1);
-      const firstHum = hums[0];
-      const humDelta = (latestHum - firstHum).toFixed(1);
+      homeSetText(
+        "trendAnalyticsBadge",
+        `เทียบต้นช่วง: อุณหภูมิ ${signed(tempDelta)}°C` +
+        ` | ความชื้น ${signed(humDelta)}%`
+      );
 
-      let trendBadgeHTML = "";
-      if (tempDelta > 0) {
-        trendBadgeHTML += `<span class="text-rose-600 font-semibold">▲ อุณหภูมิเพิ่มขึ้น +${tempDelta}°C</span>`;
-      } else if (tempDelta < 0) {
-        trendBadgeHTML += `<span class="text-emerald-600 font-semibold">▼ อุณหภูมิลดลง ${tempDelta}°C</span>`;
-      } else {
-        trendBadgeHTML += `<span class="text-slate-600 font-semibold">► อุณหภูมิคงที่</span>`;
+      const comfortable =
+        latest.temp >= 22 && latest.temp <= 26 &&
+        latest.hum >= 50 && latest.hum <= 65;
+
+      homeSetText(
+        "comfortStatus",
+        comfortable
+          ? "อยู่ในช่วงสบายตามเกณฑ์ที่ตั้งไว้"
+          : "อยู่นอกช่วงสบายที่ตั้งไว้"
+      );
+
+      homeSetText(
+        "comfortDesc",
+        "เกณฑ์ของระบบ: 22–26°C และความชื้น 50–65%"
+      );
+
+      if (envChart) {
+        const plotted = homeChartSample(chartData);
+
+        envChart.options.animation = false;
+
+        envChart.data.labels = plotted.map(item =>
+          currentFilter === "24hour"
+            ? item.date
+            : `${item.date} ${item.time}`
+        );
+
+        envChart.data.datasets[0].data =
+          plotted.map(item => item.temp);
+
+        envChart.data.datasets[1].data =
+          plotted.map(item => item.hum);
+
+        envChart.update("none");
       }
 
-      if (humDelta > 0) {
-        trendBadgeHTML += `<span class="text-sky-600 font-semibold ml-2">(ความชื้น +${humDelta}%)</span>`;
-      } else if (humDelta < 0) {
-        trendBadgeHTML += `<span class="text-amber-600 font-semibold ml-2">(ความชื้น ${humDelta}%)</span>`;
-      }
-      document.getElementById('trendAnalyticsBadge').innerHTML = trendBadgeHTML;
-
-      const statusEl = document.getElementById('comfortStatus');
-      const descEl = document.getElementById('comfortDesc');
-      if (latestTemp >= 22 && latestTemp <= 26 && latestHum >= 50 && latestHum <= 65) {
-        statusEl.innerText = "เย็นสบายพอดี";
-        statusEl.className = "text-xl font-bold text-emerald-600";
-        descEl.innerText = `อุณหภูมิและความชื้นอยู่ในเกณฑ์สบายตัว`;
-      } else if (latestTemp > 26) {
-        statusEl.innerText = "อากาศค่อนข้างร้อน";
-        statusEl.className = "text-xl font-bold text-amber-600";
-        descEl.innerText = `ข้อแนะนำ: เปิดพัดลมหรือแอร์`;
-      } else {
-        statusEl.innerText = "ปกติ";
-        statusEl.className = "text-xl font-bold text-sky-600";
-        descEl.innerText = `สภาพอากาศในห้องปกติ`;
-      }
-
-      envChart.data.labels = labels;
-      envChart.data.datasets[0].data = temps;
-      envChart.data.datasets[1].data = hums;
-      envChart.update();
-
-      renderRawDataTable(dataList);
+      renderRawDataTable(raw);
     }
 
-    function renderRawDataTable(dataList) {
-      const tbody = document.getElementById('rawTableBody');
-      const countEl = document.getElementById('rawTableCount');
+    function renderRawDataTable(list) {
+      const tbody = document.getElementById("rawTableBody");
       if (!tbody) return;
 
-      if (!dataList || dataList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="px-4 py-6 text-center text-slate-400">ไม่พบรายการข้อมูล</td></tr>';
-        if (countEl) countEl.innerText = "0";
+      const limit = 200;
+      const visible = list.slice(-limit).reverse();
+
+      homeSetText(
+        "rawTableCount",
+        list.length > limit
+          ? `${list.length} รายการ — แสดงล่าสุด ${limit}`
+          : list.length
+      );
+
+      if (!visible.length) {
+        tbody.innerHTML =
+          '<tr><td colspan="6" class="px-4 py-6 text-center text-slate-400">' +
+          "ไม่พบรายการข้อมูล</td></tr>";
         return;
       }
 
-      const sortedNewestFirst = sortDataChronologically(dataList).reverse();
-      countEl.innerText = sortedNewestFirst.length;
+      const fragment = document.createDocumentFragment();
 
-      tbody.innerHTML = '';
-      sortedNewestFirst.forEach((item, index) => {
-        const dateStr = cleanDateString(item.date || item.Date || "-");
-        const timeStr = cleanTimeString(item.time || item.Time || "-");
-        const tempVal = parseFloat(item.temp || 0).toFixed(1);
-        const humVal = parseFloat(item.hum || 0).toFixed(1);
+      visible.forEach((item, index) => {
+        const tr = document.createElement("tr");
 
-        const tr = document.createElement('tr');
-        tr.className = index % 2 === 0 ? "bg-white hover:bg-sky-50/50 transition-colors" : "bg-slate-50/50 hover:bg-sky-50/50 transition-colors";
+        tr.className = index % 2 === 0
+          ? "bg-white hover:bg-sky-50/50 transition-colors"
+          : "bg-slate-50/50 hover:bg-sky-50/50 transition-colors";
 
-        tr.innerHTML = `
-          <td class="px-4 py-2.5 font-mono text-xs text-slate-400">#${sortedNewestFirst.length - index}</td>
-          <td class="px-4 py-2.5 font-mono text-xs text-slate-600">${dateStr}</td>
-          <td class="px-4 py-2.5 font-mono text-xs text-sky-700 font-semibold">${timeStr}</td>
-          <td class="px-4 py-2.5 font-semibold text-emerald-600">${tempVal} °C</td>
-          <td class="px-4 py-2.5 font-semibold text-sky-600">${humVal} %</td>
-          <td class="px-4 py-2.5 text-xs">
-            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ปกติ
-            </span>
-          </td>
-        `;
-        tbody.appendChild(tr);
+        const values = [
+          `#${list.length - index}`,
+          item.date,
+          item.time,
+          `${item.temp.toFixed(1)} °C`,
+          `${item.hum.toFixed(1)} %`,
+          "ปกติ"
+        ];
+
+        values.forEach((value, valIdx) => {
+          const td = document.createElement("td");
+          td.className = "px-4 py-2.5 text-xs font-mono text-slate-600";
+
+          if (valIdx === 3) td.className = "px-4 py-2.5 text-xs font-semibold text-emerald-600";
+          if (valIdx === 4) td.className = "px-4 py-2.5 text-xs font-semibold text-sky-600";
+          if (valIdx === 5) {
+            td.innerHTML = `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> ปกติ</span>`;
+          } else {
+            td.textContent = value;
+          }
+          tr.appendChild(td);
+        });
+
+        fragment.appendChild(tr);
       });
+
+      tbody.replaceChildren(fragment);
     }
 
     function setFilter(filterType) {
@@ -517,9 +733,9 @@
         const btn = document.getElementById(`btn-${f}`);
         if (!btn) return;
         if (f === filterType) {
-          btn.className = "px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm flex items-center gap-1.5 whitespace-nowrap";
+          btn.className = 'px-3 py-1.5 text-xs font-medium rounded-lg transition-all text-emerald-700 bg-white shadow-sm flex items-center gap-1.5 whitespace-nowrap';
         } else {
-          btn.className = "px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap";
+          btn.className = 'px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all text-slate-600 hover:text-sky-700 whitespace-nowrap';
         }
       });
 
@@ -546,25 +762,23 @@
     }
 
     function exportToCSV() {
-      const filteredList = filterDataByRange(rawDataStore);
-      if (!filteredList || filteredList.length === 0) {
-        alert("ไม่มีข้อมูลสำหรับส่งออก CSV");
+      const raw = getSelectedRawData();
+      if (!raw || raw.length === 0) {
+        alert('ไม่มีข้อมูลสำหรับส่งออก CSV');
         return;
       }
-      let csvContent = "\uFEFFลำดับ,วันที่,เวลา,อุณหภูมิ (C),ความชื้น (%)\n";
-      const sorted = sortDataChronologically(filteredList).reverse();
+      let csvContent = '\uFEFFลำดับ,วันที่,เวลา,อุณหภูมิ (C),ความชื้น (%)\n';
+      const sorted = [...raw].reverse();
 
       sorted.forEach((item, index) => {
-        const dateStr = cleanDateString(item.date || "-");
-        const timeStr = cleanTimeString(item.time || "-");
-        csvContent += `${sorted.length - index},${dateStr},${timeStr},${item.temp},${item.hum}\n`;
+        csvContent += `${raw.length - index},${item.date},${item.time},${item.temp},${item.hum}\n`;
       });
 
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `DHT11_Environment_Log_${selectedCustomDate || 'Data'}.csv`);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `DHT11_Environment_Log_${selectedCustomDate || 'Data'}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -573,8 +787,8 @@
     function exportChartImage() {
       const canvas = document.getElementById('envChart');
       if (!canvas) return;
-      const imageURI = canvas.toDataURL("image/png");
-      const link = document.createElement("a");
+      const imageURI = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
       link.href = imageURI;
       link.download = `DHT11_Trend_Chart_${selectedCustomDate || 'Current'}.png`;
       document.body.appendChild(link);
@@ -584,8 +798,18 @@
 
     window.onload = () => {
       initChart();
-      fetchData();
-      setInterval(fetchData, 30000);
+      
+      async function homePollLoop() {
+        try {
+          if (!document.hidden) {
+            await fetchData();
+          }
+        } finally {
+          setTimeout(homePollLoop, 30000);
+        }
+      }
+
+      homePollLoop();
     };
   </script>
 </body>
